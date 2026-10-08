@@ -1,0 +1,1 @@
+const btn=document.getElementById('togglePassword');const field=document.getElementById('password');if(btn&&field){btn.addEventListener('click',()=>{const visible=field.type==='text';field.type=visible?'password':'text';btn.textContent=visible?'Show':'Hide';btn.setAttribute('aria-label',visible?'Show password':'Hide password');});}

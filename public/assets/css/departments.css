@@ -1,0 +1,421 @@
+.gf-departments {
+  color: #233e30;
+}
+.gf-dept-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+.gf-eyebrow {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  color: #288552;
+}
+.gf-dept-heading h1 {
+  font:
+    800 clamp(25px, 3vw, 34px)/1.2 Manrope,
+    sans-serif;
+  letter-spacing: -1px;
+  margin: 8px 0;
+}
+.gf-dept-heading p,
+.gf-panel-header p {
+  color: #819187;
+  font-size: 13px;
+  margin: 0;
+}
+.gf-actions,
+.gf-form-actions {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+.gf-btn {
+  border: 1px solid #d7e9dc;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 17px;
+  border-radius: 11px;
+  font-weight: 750;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.gf-btn svg,
+.gf-template svg {
+  width: 16px;
+  height: 16px;
+}
+.gf-btn-main {
+  background: #278d52;
+  color: #fff;
+  border-color: #278d52;
+}
+.gf-btn-main:hover {
+  background: #1c7342;
+}
+.gf-btn-soft {
+  background: #fff;
+  color: #33764d;
+}
+.gf-btn-soft:hover {
+  background: #eef8f1;
+}
+.gf-kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.gf-kpi {
+  background: white;
+  border: 1px solid #e4eee7;
+  border-radius: 16px;
+  padding: 19px;
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 4px 11px;
+  align-items: center;
+}
+.gf-kpi svg {
+  grid-row: span 2;
+  color: #269459;
+  width: 20px;
+  height: 20px;
+  background: #edf8f0;
+  box-sizing: content-box;
+  padding: 10px;
+  border-radius: 12px;
+}
+.gf-kpi span {
+  font-size: 12px;
+  color: #778c7e;
+}
+.gf-kpi strong {
+  font:
+    800 26px Manrope,
+    sans-serif;
+}
+.gf-panel {
+  background: white;
+  border: 1px solid #e5eee8;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.gf-panel-header {
+  padding: 23px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+}
+.gf-panel-header h2 {
+  font-size: 17px;
+  margin: 0 0 6px;
+}
+.gf-search {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid #e1eae3;
+  padding: 9px 12px;
+  border-radius: 10px;
+}
+.gf-search svg {
+  width: 17px;
+  color: #91a696;
+}
+.gf-search input {
+  outline: 0;
+  border: 0;
+  width: 250px;
+  font-size: 12px;
+}
+.gf-table-wrap {
+  overflow-x: auto;
+}
+.gf-panel table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 790px;
+  text-align: left;
+}
+.gf-panel th {
+  background: #f8fbf8;
+  font-size: 10px;
+  letter-spacing: 0.8px;
+  color: #8b9f91;
+  padding: 15px 18px;
+}
+.gf-panel td {
+  padding: 17px 18px;
+  border-top: 1px solid #edf2ee;
+  font-size: 12px;
+  vertical-align: middle;
+}
+.gf-panel td strong {
+  display: block;
+  font-weight: 750;
+}
+.gf-panel td small {
+  display: block;
+  color: #90a095;
+  margin-top: 5px;
+}
+.gf-count {
+  font-weight: 800;
+  color: #358a55;
+}
+.gf-titles {
+  margin-top: 6px;
+  color: #839789;
+  max-width: 280px;
+  line-height: 1.6;
+}
+.gf-status {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 25px;
+  background: #edf7ef;
+  color: #2a9253;
+  font-size: 11px;
+  font-weight: 750;
+}
+.gf-status.inactive {
+  background: #f3f3f3;
+  color: #888;
+}
+.gf-small-button {
+  border: 1px solid #dcebdd;
+  background: white;
+  color: #28764a;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.gf-empty {
+  padding: 24px;
+  text-align: center;
+  color: #889c8c;
+}
+.gf-alert {
+  padding: 14px 16px;
+  border-radius: 10px;
+  margin-bottom: 18px;
+}
+.gf-ok {
+  background: #e5f7ea;
+  color: #276f42;
+}
+.gf-bad {
+  background: #fff0ec;
+  color: #a94437;
+}
+.gf-modal-backdrop:not([hidden]) {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 41, 27, 0.38);
+  z-index: 150;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  backdrop-filter: blur(3px);
+}
+.gf-modal {
+  width: min(600px, 100%);
+  max-height: 90vh;
+  overflow: auto;
+  background: white;
+  border-radius: 18px;
+  padding: 25px;
+  box-shadow: 0 25px 60px #17322233;
+}
+.gf-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  border-bottom: 1px solid #e7eee7;
+  padding-bottom: 16px;
+}
+.gf-modal-header h2 {
+  margin: 7px 0 0;
+  font-size: 21px;
+}
+.gf-modal-header > button {
+  background: #f2f6f3;
+  border: 0;
+  border-radius: 8px;
+  padding: 8px;
+}
+.gf-modal-header svg {
+  height: 18px;
+  width: 18px;
+}
+.gf-form {
+  padding-top: 20px;
+  display: grid;
+  gap: 16px;
+}
+.gf-form[hidden] {
+  display: none;
+}
+.gf-form label {
+  font-size: 12px;
+  font-weight: 750;
+  display: grid;
+  gap: 8px;
+}
+.gf-form label small {
+  font-weight: 400;
+  color: #829389;
+}
+.gf-form input,
+.gf-form textarea {
+  width: 100%;
+  border: 1px solid #dce7de;
+  border-radius: 10px;
+  padding: 12px;
+  background: white;
+  outline-color: #67b982;
+  color: #24402f;
+}
+.gf-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.gf-hint {
+  font-size: 11px;
+  color: #809584;
+  line-height: 1.6;
+}
+.gf-form-actions {
+  justify-content: end;
+  margin-top: 6px;
+}
+.gf-template {
+  color: #287b49;
+  background: #edf8ef;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.gf-preview {
+  margin-top: 20px;
+}
+@media (max-width: 900px) {
+  .gf-dept-heading {
+    flex-direction: column;
+  }
+  .gf-kpis {
+    grid-template-columns: 1fr 1fr;
+  }
+  .gf-panel-header {
+    flex-wrap: wrap;
+  }
+  .gf-search input {
+    width: 180px;
+  }
+}
+@media (max-width: 520px) {
+  .gf-kpis {
+    grid-template-columns: 1fr;
+  }
+  .gf-two {
+    grid-template-columns: 1fr;
+  }
+  .gf-modal {
+    padding: 18px;
+  }
+  .gf-actions {
+    width: 100%;
+  }
+  .gf-actions .gf-btn {
+    flex: 1;
+  }
+}
+
+/* Job Titles count button & list modal */
+.gf-departments .gf-titles-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #d3ebdb;
+  background: #edf8f1;
+  color: #26784b;
+  padding: 9px 12px;
+  border-radius: 10px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.gf-departments .gf-titles-trigger:hover {
+  background: #dff2e5;
+  border-color: #abdaba;
+}
+.gf-departments .gf-titles-trigger:focus-visible {
+  outline: 2px solid #26784b;
+  outline-offset: 3px;
+}
+.gf-departments .gf-titles-trigger svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+.gf-departments .gf-titles-dialog {
+  width: min(510px, 100%);
+}
+.gf-departments .gf-titles-subtitle {
+  color: #768a7d;
+  font-size: 12px;
+  margin: 16px 0 12px;
+}
+.gf-departments .gf-titles-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+.gf-departments .gf-titles-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 14px;
+  border: 1px solid #e4eee7;
+  border-radius: 11px;
+  color: #304b39;
+  font-weight: 650;
+  background: #fbfdfb;
+  overflow-wrap: anywhere;
+}
+.gf-departments .gf-title-number {
+  display: grid;
+  place-items: center;
+  flex: none;
+  min-width: 29px;
+  height: 29px;
+  border-radius: 9px;
+  background: #e5f5e9;
+  color: #287e4a;
+  font-size: 11px;
+}
+.gf-departments .gf-titles-list .gf-title-empty {
+  font-weight: 400;
+  color: #788b7e;
+}

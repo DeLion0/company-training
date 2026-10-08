@@ -1,0 +1,351 @@
+/* Grow/Flow — Sidebar */
+.sidebar {
+  --sidebar-green: #238350;
+  --sidebar-soft: #e9f6ed;
+  --sidebar-text: #34483b;
+  --sidebar-muted: #7b9183;
+
+  width: 258px;
+  flex: 0 0 258px;
+  height: 100vh;
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 14px 16px;
+  background: #ffffff;
+  border-right: 1px solid #e5eee8;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.sidebar .brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 12px;
+  margin-bottom: 30px;
+}
+
+.sidebar .brand-mark {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: #27884f;
+  color: #ffffff;
+}
+
+.sidebar .brand-mark svg {
+  width: 23px;
+  height: 23px;
+}
+
+.sidebar .brand-name {
+  font-family: Manrope, sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: #1b3928;
+  line-height: 1.1;
+}
+
+.sidebar .brand-name span {
+  color: #2b9859;
+}
+
+.sidebar .brand-name small {
+  display: block;
+  margin-top: 6px;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #91a698;
+}
+
+.sidebar .workspace {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px;
+  margin-bottom: 26px;
+  border: 1px solid #e4eee6;
+  border-radius: 13px;
+  background: #f5faf6;
+}
+
+.sidebar .workspace-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  padding: 0;
+  border-radius: 10px;
+  background: #dcefe1;
+  color: #277247;
+  font-weight: 800;
+}
+
+.sidebar .workspace-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebar .workspace-copy strong {
+  font-size: 11px;
+  color: #274533;
+}
+
+.sidebar .workspace-copy small {
+  font-size: 10px;
+  color: var(--sidebar-muted);
+}
+
+.sidebar .navigation {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar .nav-label {
+  margin: 0 12px 12px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  color: #9aaea0;
+}
+
+.sidebar .nav-label.second-label {
+  margin-top: 24px;
+}
+
+.sidebar .nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-height: 44px;
+  padding: 11px 13px;
+  margin-bottom: 4px;
+  border-radius: 10px;
+  color: #697d70;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.sidebar .nav-link svg {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+  stroke-width: 1.9;
+}
+
+.sidebar .nav-link:hover {
+  background: #f1f8f3;
+  color: #28764b;
+}
+
+.sidebar .nav-link.active {
+  background: var(--sidebar-soft);
+  color: var(--sidebar-green);
+}
+
+.sidebar .nav-link.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 11px;
+  bottom: 11px;
+  width: 3px;
+  border-radius: 0 4px 4px 0;
+  background: #2d9d5b;
+}
+
+.sidebar .nav-link:focus-visible,
+.sidebar .sidebar-logout-btn:focus-visible {
+  outline: 2px solid #238350;
+  outline-offset: 2px;
+}
+
+.sidebar .sidebar-bottom {
+  margin-top: auto;
+  padding-top: 25px;
+}
+
+.sidebar .sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 16px 10px 12px;
+  border-top: 1px solid #e5eee8;
+  margin-top: 0;
+}
+
+.sidebar .sidebar-user .avatar {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #dcefe2;
+  color: #28794b;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+}
+
+.sidebar .sidebar-user strong {
+  color: #273c2e;
+}
+
+.sidebar .sidebar-user small {
+  color: var(--sidebar-muted);
+}
+
+.sidebar .sidebar-logout-form {
+  margin: 8px 0 0;
+}
+
+.sidebar .sidebar-logout-btn {
+  width: 100%;
+  min-height: 43px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #ffffff;
+  color: #35774c;
+  border: 1px solid #d9eadf;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.sidebar .sidebar-logout-btn svg {
+  width: 17px;
+  height: 17px;
+}
+
+.sidebar .sidebar-logout-btn:hover {
+  background: #eaf6ed;
+  border-color: #a9d4b6;
+}
+
+@media (max-width: 1120px) {
+  .sidebar {
+    width: 235px;
+    flex-basis: 235px;
+  }
+}
+
+@media (max-width: 850px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 258px;
+    max-width: 85vw;
+    height: 100dvh;
+    transform: translateX(-102%);
+    transition: transform 0.25s ease;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar,
+  .sidebar .nav-link,
+  .sidebar .sidebar-logout-btn {
+    transition: none;
+  }
+}
+
+/* ==========================================
+   Grow/Flow — Sidebar Navigation Alignment
+   ========================================== */
+
+.sidebar .navigation {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+
+.sidebar .nav-link {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+
+  width: 100%;
+  min-height: 44px;
+
+  /* Reduced icon-to-label spacing */
+  gap: 9px;
+
+  padding: 10px 12px;
+  margin-bottom: 3px;
+
+  text-align: left;
+  text-decoration: none;
+  border-radius: 10px;
+}
+
+.sidebar .nav-link > svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+
+  flex: 0 0 18px;
+  flex-shrink: 0;
+
+  stroke-width: 1.9;
+}
+
+.sidebar .nav-link > span {
+  display: inline-block;
+  flex: 0 1 auto;
+  min-width: 0;
+
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 600;
+  white-space: normal;
+}
+
+.sidebar .nav-label {
+  margin-left: 12px;
+  margin-bottom: 10px;
+}
+
+.sidebar .nav-label.second-label {
+  margin-top: 26px;
+}
+
+.sidebar .sidebar-logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+
+.sidebar .sidebar-logout-btn > svg {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 17px;
+}
