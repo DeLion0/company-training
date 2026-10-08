@@ -3,14 +3,14 @@
   <div class="workspace"><span class="workspace-icon">N</span><span class="workspace-copy"><strong>Nexora Company</strong><small>HR Workspace</small></span><i data-lucide="chevrons-up-down" class="muted-icon"></i></div>
   <nav class="navigation">
     <p class="nav-label">WORKSPACE</p>
-    <a href="#" class="nav-link inactive-link"><i data-lucide="layout-dashboard"></i> Overview</a>
-    <a href="#" class="nav-link inactive-link"><i data-lucide="users-round"></i> Employees</a>
-    <a href="#" class="nav-link inactive-link"><i data-lucide="building-2"></i> Departments</a>
+    <a href="#" class="nav-link inactive-link"><i data-lucide="layout-dashboard"></i> BLANK</a>
+    <a href="#" class="nav-link inactive-link"><i data-lucide="users-round"></i> BLANK</a>
+    <a href="#" class="nav-link inactive-link"><i data-lucide="building-2"></i> BLANK</a>
     <p class="nav-label second-label">LEARNING & GROWTH</p>
     <a href="?page=training" class="nav-link active" aria-current="page"><i data-lucide="book-open-check"></i> Training Programs <span class="active-dot"></span></a>
-    <a href="#" class="nav-link inactive-link"><i data-lucide="clipboard-list"></i> Applications</a>
-    <a href="#" class="nav-link inactive-link"><i data-lucide="award"></i> Competencies</a>
-    <a href="#" class="nav-link inactive-link"><i data-lucide="chart-no-axes-column-increasing"></i> Analytics</a>
+    <a href="#" class="nav-link inactive-link"><i data-lucide="clipboard-list"></i> BLANK</a>
+    <a href="#" class="nav-link inactive-link"><i data-lucide="award"></i> BLANK</a>
+    <a href="#" class="nav-link inactive-link"><i data-lucide="chart-no-axes-column-increasing"></i> BLANK</a>
     <p class="nav-label second-label">GENERAL</p>
     <a href="#" class="nav-link inactive-link"><i data-lucide="settings-2"></i> Settings</a>
   </nav>
