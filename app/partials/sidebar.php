@@ -14,5 +14,6 @@
     <p class="nav-label second-label">GENERAL</p>
     <a href="#" class="nav-link inactive-link"><i data-lucide="settings-2"></i> Settings</a>
   </nav>
-  <div class="sidebar-bottom"><div class="support-box"><div class="support-icon"><i data-lucide="headset"></i></div><div><strong>Need some help?</strong><p>Your workspace guide is coming soon.</p></div></div><div class="sidebar-user"><div class="avatar">AM</div><div><strong>Alex Morgan</strong><small>HR Administrator</small></div><i data-lucide="ellipsis"></i></div></div>
-</aside>
+  <div class="sidebar-bottom"><div class="support-box"><div class="support-icon"><i data-lucide="headset"></i></div><div><strong>Need some help?</strong><p>Your workspace guide is coming soon.</p></div></div><div class="sidebar-user">
+    <!--<div class="avatar">AM</div><div><strong>Alex Morgan</strong><small>HR Administrator</small></div><i data-lucide="ellipsis"></i></div></div>
+</aside-->
