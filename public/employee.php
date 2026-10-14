@@ -70,10 +70,11 @@ $employeePortalPreview = false;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="assets/css/employee-portal.css?v=20261014-3">
+    <link rel="stylesheet" href="assets/css/employee-portal.css?v=20261015-1">
+    <link rel="stylesheet" href="assets/css/employee-dashboard.css?v=20261015-1">
 
     <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-    <script defer src="assets/js/employee-portal.js?v=20261014-3"></script>
+    <script defer src="assets/js/employee-portal.js?v=20261015-1"></script>
 </head>
 
 <body class="employee-portal-page">
