@@ -30,7 +30,19 @@ function login_user(string $email,string $password): bool {
     // Avoid skipping expensive password checks for unknown emails.
     $dummy='$2y$10$abcdefghijklmnopqrstuu.eH6W38FyADGSpEU9pOzFppLfHPpXNC';
     $valid=password_verify($password, $row['password_hash'] ?? $dummy);
-    if (!$row || !$valid || $row['status']!=='active' || !in_array($row['role_key'],['hr','department_head'],true)) return false;
+    
+   if (
+    !$row
+    || !$valid
+    || $row['status'] !== 'active'
+    || !in_array(
+        $row['role_key'],
+        ['hr', 'department_head', 'employee'],
+        true
+    )
+) {
+    return false;
+}
     session_regenerate_id(true);
     $_SESSION['user']=['id'=>(int)$row['id'],'name'=>$row['full_name'],'email'=>$row['email'],
         'role'=>$row['role_key'],'department_id'=>$row['department_id']===null?null:(int)$row['department_id']];

@@ -62,6 +62,15 @@ $isHR = $user['role'] === 'hr';
         <i data-lucide="building-2"></i>
         <span>Departments</span>
       </a>
+
+      <a
+        href="?page=managers"
+        class="nav-link <?= $active === 'managers' ? 'active' : '' ?>"
+        <?= $active === 'managers' ? 'aria-current="page"' : '' ?>
+      >
+        <i data-lucide="user-round-cog"></i>
+        <span>Department Heads</span>
+      </a>
     <?php endif; ?>
 
     <!-- LEARNING & GROWTH -->
@@ -81,6 +90,20 @@ $isHR = $user['role'] === 'hr';
       <?= $active === 'available-training' ? 'aria-current="page"' : '' ?>>
       <i data-lucide="calendar-check"></i>
       <span>Available Training</span>
+    </a>
+
+    <a
+      class="nav-link <?= ($page ?? '') === 'performance' ? 'active' : '' ?>"
+      href="?page=performance">
+      <i data-lucide="clipboard-check"></i>
+
+      <span>
+        Performance Evaluation
+      </span>
+
+      <?php if (($page ?? '') === 'performance'): ?>
+        <span class="active-dot"></span>
+      <?php endif; ?>
     </a>
 
     <a

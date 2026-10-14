@@ -2,110 +2,63 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <meta name="theme-color" content="#f5faf6">
+    <title>Grow/Flow</title>
 
-  <title>Grow/Flow</title>
+    <!-- GLOBAL CSS -->
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/sidebar.css">
 
-  <!-- FONTS -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- DASHBOARD ONLY -->
+    <?php if (($page ?? '') === 'dashboard'): ?>
+        <link rel="stylesheet" href="assets/css/dashboard.css?v=20261009-2">
+        <script defer src="assets/js/dashboard.js?v=20261009-2"></script>
+    <?php endif; ?>
 
-  <link
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet">
+    <!-- TRAINING ONLY -->
+    <?php if (($page ?? '') === 'training'): ?>
+        <link rel="stylesheet" href="assets/css/training.css">
+        <script defer src="assets/js/training.js"></script>
+    <?php endif; ?>
 
-  <!-- GLOBAL CSS -->
-  <link rel="stylesheet" href="assets/css/layout.css?v=20261009-3">
-  <link rel="stylesheet" href="assets/css/sidebar.css?v=20261009-3">
+    <!-- EMPLOYEES ONLY -->
+    <?php if (($page ?? '') === 'employees'): ?>
+        <link rel="stylesheet" href="assets/css/employees.css">
+        <script defer src="assets/js/employees.js"></script>
+    <?php endif; ?>
 
-  <!-- DASHBOARD -->
-  <?php if (($page ?? '') === 'dashboard'): ?>
-    <link rel="stylesheet" href="assets/css/dashboard.css?v=20261009-4">
-    <script defer src="assets/js/dashboard.js?v=20261009-4"></script>
-  <?php endif; ?>
+    <!-- DEPARTMENTS ONLY -->
+    <?php if (($page ?? '') === 'departments'): ?>
+        <link rel="stylesheet" href="assets/css/departments.css">
+        <script defer src="assets/js/departments.js"></script>
+    <?php endif; ?>
 
-  <!-- EMPLOYEES -->
-  <?php if (($page ?? '') === 'employees'): ?>
-    <link
-      rel="stylesheet"
-      href="assets/css/employees.css?v=20261009-3">
-  <?php endif; ?>
+    <!-- AVAILABLE TRAINING ONLY -->
+    <?php if (($page ?? '') === 'available-training'): ?>
+        <link rel="stylesheet" href="assets/css/available-training.css">
+        <script defer src="assets/js/available-training.js"></script>
+    <?php endif; ?>
 
-  <!-- DEPARTMENTS -->
-  <?php if (($page ?? '') === 'departments'): ?>
-    <link
-      rel="stylesheet"
-      href="assets/css/departments.css?v=20261009-3">
-  <?php endif; ?>
 
-  <!-- TRAINING PROGRAMS -->
-  <?php if (($page ?? '') === 'training'): ?>
-    <link
-      rel="stylesheet"
-      href="assets/css/training.css?v=20261009-3">
-  <?php endif; ?>
+    <!-- PERFORMANCE EVALUATION ONLY -->
+    <?php if (($page ?? '') === 'performance'): ?>
+        <link
+            rel="stylesheet"
+            href="assets/css/performance.css?v=20261014-2"
+        >
+        <script
+            defer
+            src="assets/js/performance.js?v=20261014-2"
+        ></script>
+    <?php endif; ?>
 
-  <!-- AVAILABLE TRAINING -->
-  <?php if (($page ?? '') === 'available-training'): ?>
-    <link
-      rel="stylesheet"
-      href="assets/css/available-training.css?v=20261009-3">
-  <?php endif; ?>
+    <!-- GLOBAL LIBRARIES -->
+    <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 
-  <!-- LUCIDE ICONS -->
-  <script
-    defer
-    src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-
-  <!-- GLOBAL JS -->
-  <script
-    defer
-    src="assets/js/app.js?v=20261009-3"></script>
-
-  <!-- DASHBOARD JS -->
-  <?php if (($page ?? '') === 'dashboard'): ?>
-    <script
-      defer
-      src="assets/js/dashboard.js?v=20261009-3"></script>
-  <?php endif; ?>
-
-  <!-- EMPLOYEES JS -->
-  <?php if (($page ?? '') === 'employees'): ?>
-    <script
-      defer
-      src="assets/js/employees.js?v=20261009-3"></script>
-  <?php endif; ?>
-
-  <!-- DEPARTMENTS JS -->
-  <?php if (($page ?? '') === 'departments'): ?>
-    <script
-      defer
-      src="assets/js/departments.js?v=20261009-3"></script>
-  <?php endif; ?>
-
-  <!-- TRAINING JS -->
-  <?php if (($page ?? '') === 'training'): ?>
-    <script
-      defer
-      src="assets/js/training.js?v=20261009-3"></script>
-  <?php endif; ?>
-
-  <!-- AVAILABLE TRAINING JS -->
-  <?php if (($page ?? '') === 'available-training'): ?>
-    <script
-      defer
-      src="assets/js/available-training.js?v=20261009-3"></script>
-  <?php endif; ?>
+    <!-- GLOBAL JS -->
+    <script defer src="assets/js/app.js"></script>
 </head>
 
 <body>
-
-  <div class="app-layout">
-
-    <div
-      id="overlay"
-      class="mobile-overlay"
-      hidden></div>

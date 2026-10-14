@@ -49,7 +49,7 @@ $error = $error ?? '';
                     <div class="control"><svg viewBox="0 0 24 24" aria-hidden="true">
                             <rect x="5" y="10" width="14" height="11" rx="2" />
                             <path d="M8 10V7a4 4 0 0 1 8 0v3" />
-                        </svg><input required type="password" name="password" id="password" placeholder="Enter your password" autocomplete="current-password" minlength="8"><button type="button" class="eye" id="togglePassword" aria-label="Show password">Show</button></div>
+                        </svg><input required type="password" name="password" id="password" placeholder="Enter your password" autocomplete="current-password" maxlength="1024"><button type="button" class="eye" id="togglePassword" aria-label="Show password">Show</button></div>
                     <button class="submit" type="submit">Sign in to workspace <span aria-hidden="true">→</span></button>
                 </form>
                 <div class="login-foot"><span>For HR administrators and department heads</span><span>Protected company access</span></div>

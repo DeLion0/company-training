@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../app/core/auth.php';
 require_once __DIR__ . '/../app/core/departments-data.php';
+require_once __DIR__ . '/../app/core/employee-account.php';
 
 secure_session_start();
 
@@ -25,8 +26,10 @@ $allowed = [
     'dashboard',
     'training',
     'available-training',
+    'performance',
     'employees',
     'departments',
+    'managers',
     'login',
     'logout'
 ];
@@ -61,11 +64,25 @@ if ($action === 'logout') {
 // LOGIN
 // ==========================================
 
-if ($action === 'login') {
+    if ($action === 'login') {
 
     if (authenticated_user()) {
-        redirect_to('?page=dashboard');
-        exit;
+
+        $loggedInUser =
+            current_user();
+
+        if (
+            ($loggedInUser['role'] ?? '')
+            === 'employee'
+        ) {
+            redirect_to(
+                'employee.php?module=home'
+            );
+        }
+
+        redirect_to(
+            '?page=dashboard'
+        );
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -97,9 +114,33 @@ if ($action === 'login') {
                 try {
 
                     if (login_user($email, $password)) {
-                        redirect_to('?page=dashboard');
-                        exit;
+
+                        $loggedInUser = current_user();
+
+                        if (
+                            ($loggedInUser['role'] ?? '')
+                            === 'employee'
+                        ) {
+                            redirect_to(
+                                'employee.php?module=home'
+                            );
+                        }
+
+                        redirect_to(
+                            '?page=dashboard'
+                        );
                     }
+
+                    if (
+                    employee_activation_begin(
+                        $email,
+                        $password
+                    )
+                ) {
+                    redirect_to(
+                        'activate-account.php'
+                    );
+                }
 
                 } catch (PDOException $ex) {
 
@@ -399,6 +440,269 @@ if ($action === 'departments') {
 // HR TRAINING PROGRAM MANAGEMENT
 // ==========================================
 
+if ($action === 'performance') {
+
+    if (($user['role'] ?? '') !== 'hr') {
+        http_response_code(403);
+        exit('Access denied. HR only.');
+    }
+
+    require_once __DIR__
+        . '/../app/core/performance-data.php';
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+        if (!csrf_valid($_POST['csrf'] ?? null)) {
+            http_response_code(403);
+            exit('Invalid CSRF token.');
+        }
+
+        unset(
+            $_SESSION['performance_message'],
+            $_SESSION['performance_error']
+        );
+
+        $performanceAction =
+            (string) ($_POST['performance_action'] ?? '');
+
+        try {
+
+            if ($performanceAction === 'manual') {
+
+                $saved = performance_save_manual(
+                    (int) $user['id'],
+                    $_POST
+                );
+
+                $_SESSION['performance_message'] =
+                    'Saved '
+                    . $saved['employee']
+                    . ' · '
+                    . $saved['month']
+                    . ' · '
+                    . number_format(
+                        (float) $saved['score'],
+                        2
+                    )
+                    . '%.';
+
+            } elseif ($performanceAction === 'preview') {
+
+    $file =
+        $_FILES['excel_file']
+        ?? null;
+
+    if (
+        !$file
+        || ($file['error'] ?? UPLOAD_ERR_NO_FILE)
+            !== UPLOAD_ERR_OK
+        || ($file['size'] ?? 0) > 2097152
+        || ($file['size'] ?? 0) < 1
+        || strtolower(
+            pathinfo(
+                $file['name'] ?? '',
+                PATHINFO_EXTENSION
+            )
+        ) !== 'xlsx'
+        || !is_uploaded_file($file['tmp_name'])
+    ) {
+        throw new InvalidArgumentException(
+            'Choose a valid .xlsx file (maximum 2 MB).'
+        );
+    }
+
+    unset(
+        $_SESSION['performance_preview']
+    );
+
+    $sheetRows =
+        performance_parse_xlsx(
+            $file['tmp_name']
+        );
+
+    $previewRows =
+        performance_validate_import(
+            (int) $user['id'],
+            $sheetRows
+        );
+
+    $_SESSION['performance_preview'] =
+        $previewRows;
+
+    $validCount = 0;
+    $invalidCount = 0;
+
+    foreach ($previewRows as $previewRow) {
+        if (!empty($previewRow['valid'])) {
+            $validCount++;
+        } else {
+            $invalidCount++;
+        }
+    }
+
+    $_SESSION['performance_message'] =
+        'Excel validated. '
+        . $validCount
+        . ' valid row'
+        . ($validCount === 1 ? '' : 's')
+        . (
+            $invalidCount > 0
+                ? ' and '
+                    . $invalidCount
+                    . ' invalid row'
+                    . ($invalidCount === 1 ? '' : 's')
+                : ''
+        )
+        . '. Review the preview before saving.';
+
+    // Force the session data to be written before the 303 redirect.
+    // This is safe on localhost and Railway.
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_write_close();
+    }
+
+    header(
+        'Location: ?page=performance&preview=1#performancePreview',
+        true,
+        303
+    );
+    exit;
+
+                    
+
+            } elseif ($performanceAction === 'cancel_import') {
+
+                unset($_SESSION['performance_preview']);
+
+                $_SESSION['performance_message'] =
+                    'Import cancelled. No performance ratings were saved.';
+
+            } elseif ($performanceAction === 'import') {
+
+                $preview =
+                    $_SESSION['performance_preview']
+                    ?? null;
+
+                if (
+                    !is_array($preview)
+                    || !$preview
+                ) {
+                    throw new InvalidArgumentException(
+                        'Preview your Excel workbook first.'
+                    );
+                }
+
+                $result =
+                    performance_import_commit(
+                        (int) $user['id'],
+                        $preview
+                    );
+
+                unset($_SESSION['performance_preview']);
+
+                $_SESSION['performance_message'] =
+                    'Saved '
+                    . $result['saved']
+                    . ' monthly rating'
+                    . (
+                        $result['saved'] === 1
+                            ? ''
+                            : 's'
+                    )
+                    . '.';
+
+            } else {
+
+                throw new InvalidArgumentException(
+                    'Unknown performance action.'
+                );
+            }
+
+        } catch (InvalidArgumentException $ex) {
+
+            $_SESSION['performance_error'] =
+                $ex->getMessage();
+
+        } catch (Throwable $ex) {
+
+            error_log(
+                'Performance action failed: '
+                . $ex->getMessage()
+            );
+
+            $_SESSION['performance_error'] =
+                'Could not complete the performance request. Check the PHP error log.';
+        }
+
+        redirect_to('?page=performance');
+        exit;
+    }
+}
+
+if ($action === 'managers') {
+
+    if (($user['role'] ?? '') !== 'hr') {
+        http_response_code(403);
+        exit('Access denied. HR only.');
+    }
+
+    require_once __DIR__
+        . '/../app/core/managers-data.php';
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+        if (!csrf_valid($_POST['csrf'] ?? null)) {
+            http_response_code(403);
+            exit('Invalid CSRF token.');
+        }
+
+        unset(
+            $_SESSION['manager_created'],
+            $_SESSION['manager_error']
+        );
+
+        $managerAction =
+            (string) (
+                $_POST['manager_action']
+                ?? ''
+            );
+
+        try {
+
+            if ($managerAction !== 'create') {
+                throw new InvalidArgumentException(
+                    'Unknown Department Head action.'
+                );
+            }
+
+            $_SESSION['manager_created'] =
+                manager_create(
+                    (int) $user['id'],
+                    $_POST
+                );
+
+        } catch (InvalidArgumentException $ex) {
+
+            $_SESSION['manager_error'] =
+                $ex->getMessage();
+
+        } catch (Throwable $ex) {
+
+            error_log(
+                'Department Head creation failed: '
+                . $ex->getMessage()
+            );
+
+            $_SESSION['manager_error'] =
+                'Unable to create the Department Head account. Check the PHP error log.';
+        }
+
+        redirect_to('?page=managers');
+        exit;
+    }
+}
+
+
 if ($action === 'training') {
 
     if (($user['role'] ?? '') !== 'hr') {
@@ -467,6 +771,8 @@ $page = $action;
 require __DIR__
     . '/../app/partials/layout-start.php';
 
+echo '<div class="app-layout">';
+
 require __DIR__
     . '/../app/partials/sidebar.php';
 
@@ -478,6 +784,7 @@ require __DIR__
 require __DIR__
     . '/../app/pages/' . $page . '.php';
 
+echo '</div>';
 echo '</div>';
 
 require __DIR__
