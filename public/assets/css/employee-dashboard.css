@@ -764,3 +764,34 @@
         padding-inline:0;
     }
 }
+
+
+/* =========================================================
+   Mandatory Training Escalation V1
+   ========================================================= */
+
+.employee-status-pill.is-mandatory {
+    background: #fff0ec;
+    color: #a9432f;
+    border: 1px solid #f1c7bd;
+}
+
+.employee-my-training-card.is-mandatory,
+.employee-available-card.is-mandatory {
+    border-color: #ebc1b6;
+    box-shadow:
+        0 0 0 1px rgba(169, 67, 47, .04),
+        0 10px 30px rgba(96, 45, 33, .06);
+}
+
+.employee-button.is-mandatory-static {
+    border: 1px solid #e7b8ad;
+    background: #fff1ed;
+    color: #9b3f2d;
+    cursor: default;
+}
+
+.employee-button.is-mandatory-static svg {
+    width: 15px;
+    height: 15px;
+}

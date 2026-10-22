@@ -24,6 +24,7 @@ $available = $employeePortalData['available_trainings'];
 
             <select id="employeeTrainingStatusFilter" aria-label="Filter available training">
                 <option value="">All Programs</option>
+                <option value="mandatory">Mandatory Training</option>
                 <option value="priority">Priority to Take</option>
                 <option value="recommended">Recommended</option>
                 <option value="joined">Joined</option>
@@ -44,8 +45,17 @@ $available = $employeePortalData['available_trainings'];
                 <?php
                 $openSlots = max(0, (int)$training['capacity'] - (int)$training['joined_count']);
                 $status = (string)($training['application_status'] ?? '');
+                $isMandatory = (string)($training['recommendation_kind'] ?? '') === 'mandatory_low_performance' && $status === 'joined';
                 $isPriority = (int)($training['priority'] ?? 0) === 1 && $status === 'recommended';
-                $filterStatus = $isPriority ? 'priority' : ($status === 'recommended' ? 'recommended' : ($status === 'joined' ? 'joined' : 'open'));
+                $filterStatus = $isMandatory
+                    ? 'mandatory'
+                    : ($isPriority
+                        ? 'priority'
+                        : ($status === 'recommended'
+                            ? 'recommended'
+                            : ($status === 'joined'
+                                ? 'joined'
+                                : 'open')));
                 $searchText = strtolower((string)$training['title'] . ' ' . (string)$training['instructors'] . ' ' . (string)$training['venue']);
                 ?>
 
@@ -58,7 +68,9 @@ $available = $employeePortalData['available_trainings'];
                         <div class="employee-available-icon"><i data-lucide="book-open-check"></i></div>
 
                         <div class="employee-available-badges">
-                            <?php if ($isPriority): ?>
+                            <?php if ($isMandatory): ?>
+                                <span class="employee-status-pill is-mandatory">Mandatory Training</span>
+                            <?php elseif ($isPriority): ?>
                                 <span class="employee-status-pill is-priority">Priority to Take</span>
                             <?php elseif ($status === 'recommended'): ?>
                                 <span class="employee-status-pill is-recommended">Recommended</span>
@@ -90,11 +102,13 @@ $available = $employeePortalData['available_trainings'];
                     </div>
 
                     <div class="employee-card-actions">
-                        <button type="button" class="employee-button is-secondary" data-ui-only="details">View Details</button>
-                        <?php if ($status === 'joined'): ?>
+                        <button type="button" class="employee-button is-secondary" data-training-details="<?= (int)$training['id'] ?>">View Details</button>
+                        <?php if ($isMandatory): ?>
+                            <button type="button" class="employee-button is-mandatory-static" disabled><i data-lucide="shield-check"></i> Mandatory · Enrolled</button>
+                        <?php elseif ($status === 'joined'): ?>
                             <button type="button" class="employee-button is-joined-static" disabled><i data-lucide="check"></i> Joined</button>
                         <?php else: ?>
-                            <button type="button" class="employee-button is-primary" data-ui-only="join" <?= $openSlots < 1 ? 'disabled' : '' ?>>Join Training <i data-lucide="plus"></i></button>
+                            <button type="button" class="employee-button is-primary" data-join-training="<?= (int)$training['id'] ?>" <?= $openSlots < 1 ? 'disabled' : '' ?>>Join Training <i data-lucide="plus"></i></button>
                         <?php endif; ?>
                     </div>
                 </article>

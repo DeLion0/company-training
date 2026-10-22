@@ -1,4 +1,70 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const lifecycleTabs = Array.from(
+    document.querySelectorAll('[data-av-lifecycle-tab]')
+  );
+
+  const lifecyclePanels = Array.from(
+    document.querySelectorAll('[data-av-lifecycle-panel]')
+  );
+
+  lifecycleTabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.avLifecycleTab;
+
+      lifecycleTabs.forEach((item) => {
+        const active = item === tab;
+        item.classList.toggle('active', active);
+        item.setAttribute(
+          'aria-selected',
+          active ? 'true' : 'false'
+        );
+      });
+
+      lifecyclePanels.forEach((panel) => {
+        panel.hidden =
+          panel.dataset.avLifecyclePanel !== target;
+      });
+    });
+  });
+
+  const historySearch =
+    document.getElementById('avHistorySearch');
+
+  if (historySearch) {
+    historySearch.addEventListener('input', () => {
+      const query =
+        historySearch.value.trim().toLowerCase();
+
+      const cards = Array.from(
+        document.querySelectorAll(
+          '#avHistoryGrid [data-history-filter]'
+        )
+      );
+
+      let visible = 0;
+
+      cards.forEach((card) => {
+        const match =
+          query === ''
+          || String(card.dataset.historyFilter || '')
+            .includes(query);
+
+        card.hidden = !match;
+
+        if (match) visible += 1;
+      });
+
+      const empty =
+        document.getElementById('avHistoryNoMatch');
+
+      if (empty) {
+        empty.hidden =
+          visible !== 0
+          || cards.length === 0;
+      }
+    });
+  }
+
   const search = document.getElementById('avSearch');
 
   if (search) {

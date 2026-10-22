@@ -14,7 +14,7 @@ $isActive = $accountStatus === 'active';
         <div>
             <span class="employee-page-kicker">ACCOUNT / SECURITY</span>
             <h1>Account &amp; Security</h1>
-            <p>Manage account access and password security. Activation functions will be connected after this UI is approved.</p>
+            <p>Review your account access and change your password securely.</p>
         </div>
 
         <div class="employee-heading-stat <?= $isActive ? '' : 'is-amber' ?>">
@@ -40,19 +40,49 @@ $isActive = $accountStatus === 'active';
         <article class="employee-panel">
             <div class="employee-panel-head">
                 <div>
-                    <span class="employee-section-kicker">FIRST ACCESS</span>
-                    <h2>Activation Flow</h2>
-                    <p>The final employee flow will use the same login page as HR and Department Head.</p>
+                    <span class="employee-section-kicker">PASSWORD SECURITY</span>
+                    <h2>Change Password</h2>
+                    <p>Use your current password to create a new private password for future sign-ins.</p>
                 </div>
             </div>
 
-            <div class="employee-security-steps">
-                <div class="employee-security-step <?= !$isActive ? 'is-current' : 'is-done' ?>"><b>1</b><span><strong>Temporary credentials</strong><small>Use the work email and temporary password issued after HR registration.</small></span></div>
-                <div class="employee-security-step <?= $isActive ? 'is-done' : '' ?>"><b>2</b><span><strong>Create a new password</strong><small>The employee must replace the temporary password before normal access.</small></span></div>
-                <div class="employee-security-step <?= $isActive ? 'is-done' : '' ?>"><b>3</b><span><strong>Employee Workspace unlocked</strong><small>After activation, future logins go directly to the Employee Workspace.</small></span></div>
-            </div>
+            <?php $employeePortalPreview = isset($employeePortalPreview) && $employeePortalPreview === true; ?>
 
-            <button type="button" class="employee-button is-primary full employee-security-action" data-ui-only="security" <?= $isActive ? '' : '' ?>><?= $isActive ? 'Change Password' : 'Activate Account' ?><i data-lucide="arrow-right"></i></button>
+            <?php if ($employeePortalPreview): ?>
+                <div class="employee-security-preview-note">
+                    <i data-lucide="eye"></i>
+                    Password changes are disabled in HR Employee Preview.
+                </div>
+            <?php else: ?>
+                <form method="post" action="employee.php?module=security" class="employee-password-form" autocomplete="off">
+                    <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
+                    <input type="hidden" name="employee_action" value="change_password">
+                    <input type="hidden" name="return_module" value="security">
+
+                    <label>
+                        Current Password
+                        <input type="password" name="current_password" maxlength="128" autocomplete="current-password" required>
+                    </label>
+
+                    <div class="employee-password-grid">
+                        <label>
+                            New Password
+                            <input type="password" name="new_password" minlength="12" maxlength="128" autocomplete="new-password" required>
+                        </label>
+                        <label>
+                            Confirm New Password
+                            <input type="password" name="confirm_password" minlength="12" maxlength="128" autocomplete="new-password" required>
+                        </label>
+                    </div>
+
+                    <p>Minimum 12 characters with uppercase, lowercase, a number, and a symbol.</p>
+
+                    <button type="submit" class="employee-button is-primary full employee-security-action">
+                        <i data-lucide="key-round"></i>
+                        Change Password
+                    </button>
+                </form>
+            <?php endif; ?>
         </article>
     </section>
 

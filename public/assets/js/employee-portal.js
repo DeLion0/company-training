@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   if (window.lucide) window.lucide.createIcons();
 
+  const isPreview = document.body.dataset.employeePreview === '1';
   const sidebar = document.getElementById('employeeSidebar');
   const overlay = document.getElementById('employeeOverlay');
   const menuButton = document.getElementById('employeeMenuButton');
@@ -14,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     toast.textContent = message;
     toast.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 3400);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 3600);
   };
 
   const closeSidebar = () => {
@@ -29,15 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   overlay?.addEventListener('click', closeSidebar);
-  document.addEventListener('keydown', event => {
-    if (event.key === 'Escape') closeSidebar();
-  });
 
   if (today) {
     today.textContent = new Intl.DateTimeFormat('en-US', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric'
+      month: 'long', day: 'numeric', year: 'numeric'
     }).format(new Date());
   }
 
@@ -47,13 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = url.toString();
   });
 
-  document.querySelectorAll('.employee-nav-link.is-disabled').forEach(link => {
-    link.addEventListener('click', event => {
-      event.preventDefault();
-      showToast('Competencies will be connected after the employee learning flow is complete.');
-    });
-  });
-
+  // Available Training search/filter.
   const search = document.getElementById('employeeTrainingSearch');
   const statusFilter = document.getElementById('employeeTrainingStatusFilter');
   const trainingCards = Array.from(document.querySelectorAll('#employeeAvailableGrid [data-search]'));
@@ -61,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const filterTraining = () => {
     if (!trainingCards.length) return;
-
     const query = (search?.value || '').trim().toLowerCase();
     const status = statusFilter?.value || '';
     let visible = 0;
@@ -80,42 +69,140 @@ document.addEventListener('DOMContentLoaded', () => {
   search?.addEventListener('input', filterTraining);
   statusFilter?.addEventListener('change', filterTraining);
 
+  // My Training tabs.
   const tabs = Array.from(document.querySelectorAll('[data-training-tab]'));
   const panels = Array.from(document.querySelectorAll('[data-training-panel]'));
 
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       const target = tab.dataset.trainingTab;
-
       tabs.forEach(item => {
         const active = item === tab;
         item.classList.toggle('active', active);
         item.setAttribute('aria-selected', active ? 'true' : 'false');
       });
-
       panels.forEach(panel => {
         panel.hidden = panel.dataset.trainingPanel !== target;
       });
     });
   });
 
-  document.querySelectorAll('[data-ui-only]').forEach(button => {
-    button.addEventListener('click', () => {
-      const action = button.dataset.uiOnly;
+  // Training details modal.
+  let details = {};
+  const detailsData = document.getElementById('employeeTrainingDetailsData');
+  try {
+    if (detailsData) details = JSON.parse(detailsData.textContent || '{}');
+  } catch {
+    details = {};
+  }
 
-      if (action === 'join') {
-        showToast('Join Training is not connected yet. We will enable this in the next employee functionality step.');
-      } else if (action === 'details') {
-        showToast('Training Details is not connected yet. We will enable it with the employee training flow.');
-      } else if (action === 'security') {
-        showToast('Account activation is enabled. Regular password change will be connected next under Account & Security.');
-      } else {
-        showToast('This action is UI-only for now.');
+  const dialog = document.getElementById('employeeTrainingDialog');
+  const title = document.getElementById('employeeTrainingDialogTitle');
+  const purpose = document.getElementById('employeeTrainingDialogPurpose');
+  const period = document.getElementById('employeeTrainingDialogPeriod');
+  const instructor = document.getElementById('employeeTrainingDialogInstructor');
+  const venue = document.getElementById('employeeTrainingDialogVenue');
+  const capacity = document.getElementById('employeeTrainingDialogCapacity');
+  const objectives = document.getElementById('employeeTrainingDialogObjectives');
+
+  const formatDate = value => {
+    if (!value) return 'Not specified';
+    const date = new Date(`${value}T00:00:00`);
+    if (Number.isNaN(date.getTime())) return value;
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short', day: 'numeric', year: 'numeric'
+    }).format(date);
+  };
+
+  document.querySelectorAll('[data-training-details]').forEach(button => {
+    button.addEventListener('click', () => {
+      const item = details[String(button.dataset.trainingDetails || '')];
+      if (!item || !dialog) {
+        showToast('Training details are unavailable.');
+        return;
       }
+
+      if (title) title.textContent = item.title || 'Training Details';
+      if (purpose) purpose.textContent = item.purpose || 'No purpose provided.';
+      if (period) period.textContent = `${formatDate(item.range_start)} – ${formatDate(item.range_end)}`;
+      if (instructor) instructor.textContent = item.instructors || 'Not specified';
+      if (venue) venue.textContent = item.venue || 'Not specified';
+      if (capacity) capacity.textContent = `${Number(item.joined_count || 0)} / ${Number(item.capacity || 0)} joined`;
+      if (objectives) objectives.textContent = item.objectives || 'No learning objectives provided.';
+
+      dialog.showModal();
+      if (window.lucide) window.lucide.createIcons();
     });
   });
 
-  document.getElementById('employeeNotificationButton')?.addEventListener('click', () => {
-    showToast('Employee notifications will use priority training and upcoming sessions in a later phase.');
+  document.querySelectorAll('[data-employee-dialog-close]').forEach(button => {
+    button.addEventListener('click', () => dialog?.close());
+  });
+
+  dialog?.addEventListener('click', event => {
+    if (event.target === dialog) dialog.close();
+  });
+
+  // Real Join Training action.
+  const joinForm = document.getElementById('employeeJoinTrainingForm');
+  const joinProgramId = document.getElementById('employeeJoinTrainingProgramId');
+
+  document.querySelectorAll('[data-join-training]').forEach(button => {
+    button.addEventListener('click', () => {
+      if (button.disabled) return;
+
+      if (isPreview) {
+        showToast('HR Employee Preview is read-only. Sign in as the employee to join training.');
+        return;
+      }
+
+      const programId = String(button.dataset.joinTraining || '');
+      if (!programId || !joinForm || !joinProgramId) {
+        showToast('Unable to start the training join action.');
+        return;
+      }
+
+      if (!window.confirm('Join this training program? Your enrollment will immediately use one available seat.')) {
+        return;
+      }
+
+      joinProgramId.value = programId;
+      joinForm.submit();
+    });
+  });
+
+  // Notifications dropdown.
+  const notificationButton = document.getElementById('employeeNotificationButton');
+  const notificationPanel = document.getElementById('employeeNotificationPanel');
+
+  const closeNotifications = () => {
+    if (!notificationPanel) return;
+    notificationPanel.hidden = true;
+    notificationButton?.setAttribute('aria-expanded', 'false');
+  };
+
+  notificationButton?.addEventListener('click', event => {
+    event.stopPropagation();
+    if (!notificationPanel) return;
+    const opening = notificationPanel.hidden;
+    notificationPanel.hidden = !opening;
+    notificationButton.setAttribute('aria-expanded', opening ? 'true' : 'false');
+  });
+
+  notificationPanel?.addEventListener('click', event => event.stopPropagation());
+  document.addEventListener('click', closeNotifications);
+
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    closeSidebar();
+    closeNotifications();
+    if (dialog?.open) dialog.close();
+  });
+
+  document.querySelectorAll('.employee-nav-link.is-disabled').forEach(link => {
+    link.addEventListener('click', event => {
+      event.preventDefault();
+      showToast('This module is not enabled yet.');
+    });
   });
 });

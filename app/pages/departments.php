@@ -109,7 +109,7 @@ $employeeTotal = array_sum(array_map(fn($d) => (int)$d['employee_count'], $depar
         <div class="gf-form-actions"><button type="button" class="gf-btn gf-btn-soft" data-close>Cancel</button><button class="gf-btn gf-btn-main">Add Job Title</button></div>
       </form>
       <form method="post" action="?page=departments" enctype="multipart/form-data" id="gf-excel" class="gf-form" hidden><input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>"><input type="hidden" name="department_action" value="preview">
-        <p>Use the four-column Excel template. One row represents one job title; repeat department details for additional titles.</p><a class="gf-template" href="assets/templates/growflow-departments-template.xlsx" download><i data-lucide="download"></i> Download Excel Template</a><label>Select Excel Workbook (.xlsx) *<input type="file" name="excel_file" accept=".xlsx" required></label>
+        <p>Use the four-column Excel template. One row represents one job title; repeat department details for additional titles.</p><a class="gf-template" href="templates/growflow-departments-template.xlsx" download><i data-lucide="download"></i> Download Excel Template</a><label>Select Excel Workbook (.xlsx) *<input type="file" name="excel_file" accept=".xlsx" required></label>
         <p class="gf-hint">Maximum 2 MB and 500 data rows. Preview and validation happen before saving.</p>
         <div class="gf-form-actions"><button type="button" class="gf-btn gf-btn-soft" data-close>Cancel</button><button type="submit" class="gf-btn gf-btn-main">Preview Import</button></div>
       </form>

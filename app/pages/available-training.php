@@ -9,6 +9,7 @@ require_once __DIR__ . '/../core/available-training-data.php';
 
 $availableData = available_training_data((int) $user['id']);
 $programs = $availableData['programs'];
+$historyPrograms = $availableData['history_programs'] ?? [];
 $employees = $availableData['employees'];
 $departments = $availableData['departments'];
 
@@ -52,6 +53,33 @@ foreach ($programs as $program) {
         <div class="av-alert error" role="alert"><?= e((string) $flashError) ?></div>
     <?php endif; ?>
 
+    <div class="av-lifecycle-tabs" role="tablist" aria-label="Training lifecycle">
+        <button
+            type="button"
+            class="av-lifecycle-tab active"
+            data-av-lifecycle-tab="available"
+            role="tab"
+            aria-selected="true"
+        >
+            <i data-lucide="calendar-check"></i>
+            Available Training
+            <b><?= count($programs) ?></b>
+        </button>
+
+        <button
+            type="button"
+            class="av-lifecycle-tab"
+            data-av-lifecycle-tab="history"
+            role="tab"
+            aria-selected="false"
+        >
+            <i data-lucide="history"></i>
+            Training History
+            <b><?= count($historyPrograms) ?></b>
+        </button>
+    </div>
+
+    <section data-av-lifecycle-panel="available">
     <section class="av-metrics" aria-label="Available training overview">
         <div class="av-metric">
             <i data-lucide="book-open-check"></i>
@@ -169,6 +197,164 @@ foreach ($programs as $program) {
     <div id="avNoMatch" class="av-empty" hidden>
         No programs match your search.
     </div>
+    </section>
+
+    <section
+        class="av-history-panel"
+        data-av-lifecycle-panel="history"
+        hidden
+    >
+        <div class="av-toolbar av-history-toolbar">
+            <div>
+                <h2>Training History</h2>
+                <p>
+                    Completed published programs move here automatically after
+                    the actual final meeting end time. Historical records are
+                    preserved and read-only.
+                </p>
+            </div>
+
+            <label class="av-search">
+                <i data-lucide="search"></i>
+                <input
+                    id="avHistorySearch"
+                    aria-label="Search training history"
+                    placeholder="Search completed programs..."
+                >
+            </label>
+        </div>
+
+        <?php if ($historyPrograms): ?>
+            <div class="av-grid av-history-grid" id="avHistoryGrid">
+                <?php foreach ($historyPrograms as $program): ?>
+                    <?php
+                    $lastSessionAt =
+                        (string) ($program['last_session_at'] ?? '');
+
+                    $lastSessionLabel =
+                        $lastSessionAt !== ''
+                            ? date(
+                                'M j, Y · g:i A',
+                                strtotime($lastSessionAt)
+                            )
+                            : (string) $program['range_end'];
+                    ?>
+
+                    <article
+                        class="av-program av-history-card"
+                        data-history-filter="<?= e(
+                            strtolower(
+                                (string) $program['title']
+                                . ' '
+                                . (string) $program['instructors']
+                                . ' '
+                                . (string) $program['venue']
+                            )
+                        ) ?>"
+                    >
+                        <div class="av-program-top">
+                            <span class="av-pill av-pill-history">
+                                <i data-lucide="archive"></i>
+                                Completed
+                            </span>
+
+                            <span class="av-program-id">
+                                #<?= (int) $program['id'] ?>
+                            </span>
+                        </div>
+
+                        <h3><?= e((string) $program['title']) ?></h3>
+
+                        <p class="av-description">
+                            <?= e(
+                                function_exists('mb_substr')
+                                    ? mb_substr(
+                                        (string) $program['purpose'],
+                                        0,
+                                        140
+                                    )
+                                    : substr(
+                                        (string) $program['purpose'],
+                                        0,
+                                        140
+                                    )
+                            ) ?>
+                        </p>
+
+                        <div class="av-meta">
+                            <span>
+                                <i data-lucide="calendar-range"></i>
+                                <?= e((string) $program['range_start']) ?>
+                                –
+                                <?= e((string) $program['range_end']) ?>
+                            </span>
+
+                            <span>
+                                <i data-lucide="flag"></i>
+                                Final meeting ended
+                                <?= e($lastSessionLabel) ?>
+                            </span>
+
+                            <span>
+                                <i data-lucide="user-round"></i>
+                                <?= e((string) $program['instructors']) ?>
+                            </span>
+
+                            <span>
+                                <i data-lucide="map-pin"></i>
+                                <?= e((string) $program['venue']) ?>
+                            </span>
+                        </div>
+
+                        <div class="av-history-stats">
+                            <div>
+                                <span>Joined</span>
+                                <strong>
+                                    <?= (int) $program['joined_count'] ?>
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Attendance Rows</span>
+                                <strong>
+                                    <?= (int) ($program['attendance_count'] ?? 0) ?>
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Certificates</span>
+                                <strong>
+                                    <?= (int) ($program['certificate_count'] ?? 0) ?>
+                                </strong>
+                            </div>
+                        </div>
+
+                        <div class="av-history-readonly">
+                            <i data-lucide="lock-keyhole"></i>
+                            Historical record · no new joins or recommendations
+                        </div>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+
+            <div
+                id="avHistoryNoMatch"
+                class="av-empty"
+                hidden
+            >
+                No completed programs match your search.
+            </div>
+        <?php else: ?>
+            <div class="av-empty av-history-empty">
+                <i data-lucide="history"></i>
+                <strong>No training history yet</strong>
+                <span>
+                    A program will move here automatically after its actual
+                    last meeting finishes.
+                </span>
+            </div>
+        <?php endif; ?>
+    </section>
 </main>
 
 <?php foreach ($programs as $program): ?>
@@ -423,8 +609,22 @@ foreach ($programs as $program) {
                                         : 'HR recommendation' ?>
                                 </td>
                                 <td>
-                                    <span class="av-status <?= e((string) $participant['status']) ?>">
-                                        <?= e(ucfirst((string) $participant['status'])) ?>
+                                    <?php
+                                    $participantMandatory =
+                                        (string) (
+                                            $participant['recommendation_kind']
+                                            ?? ''
+                                        )
+                                        === 'mandatory_low_performance';
+                                    ?>
+
+                                    <span
+                                        class="av-status <?= $participantMandatory ? 'mandatory' : e((string) $participant['status']) ?>"
+                                    >
+                                        <?= $participantMandatory
+                                            ? 'Mandatory · Joined'
+                                            : e(ucfirst((string) $participant['status']))
+                                        ?>
                                     </span>
                                 </td>
                             </tr>

@@ -37,8 +37,8 @@
 
     <!-- AVAILABLE TRAINING ONLY -->
     <?php if (($page ?? '') === 'available-training'): ?>
-        <link rel="stylesheet" href="assets/css/available-training.css">
-        <script defer src="assets/js/available-training.js"></script>
+        <link rel="stylesheet" href="assets/css/available-training.css?v=20261022-history1">
+        <script defer src="assets/js/available-training.js?v=20261022-history1"></script>
     <?php endif; ?>
 
 

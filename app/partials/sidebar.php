@@ -6,7 +6,6 @@ $isHR = $user['role'] === 'hr';
 
 <aside class="sidebar" id="sidebar" aria-label="Main navigation">
 
-  <!-- BRAND -->
   <div class="brand">
     <div class="brand-mark">
       <i data-lucide="sprout"></i>
@@ -18,7 +17,6 @@ $isHR = $user['role'] === 'hr';
     </div>
   </div>
 
-  <!-- WORKSPACE -->
   <div class="workspace">
     <div class="workspace-icon">G</div>
 
@@ -32,39 +30,40 @@ $isHR = $user['role'] === 'hr';
     <i data-lucide="building-2" class="muted-icon"></i>
   </div>
 
-  <!-- NAVIGATION -->
   <nav class="navigation" aria-label="Workspace navigation">
 
-    <!-- WORKSPACE MODULES -->
     <p class="nav-label">WORKSPACE</p>
 
     <a
-      href="?page=dashboard"
+      href="index.php?page=dashboard"
       class="nav-link <?= $active === 'dashboard' ? 'active' : '' ?>"
-      <?= $active === 'dashboard' ? 'aria-current="page"' : '' ?>>
+      <?= $active === 'dashboard' ? 'aria-current="page"' : '' ?>
+    >
       <i data-lucide="layout-dashboard"></i>
       <span>Dashboard</span>
     </a>
 
     <a
-      href="?page=employees"
+      href="index.php?page=employees"
       class="nav-link <?= $active === 'employees' ? 'active' : '' ?>"
-      <?= $active === 'employees' ? 'aria-current="page"' : '' ?>>
+      <?= $active === 'employees' ? 'aria-current="page"' : '' ?>
+    >
       <i data-lucide="users-round"></i>
       <span>Employees</span>
     </a>
 
     <?php if ($isHR): ?>
       <a
-        href="?page=departments"
+        href="index.php?page=departments"
         class="nav-link <?= $active === 'departments' ? 'active' : '' ?>"
-        <?= $active === 'departments' ? 'aria-current="page"' : '' ?>>
+        <?= $active === 'departments' ? 'aria-current="page"' : '' ?>
+      >
         <i data-lucide="building-2"></i>
         <span>Departments</span>
       </a>
 
       <a
-        href="?page=managers"
+        href="index.php?page=managers"
         class="nav-link <?= $active === 'managers' ? 'active' : '' ?>"
         <?= $active === 'managers' ? 'aria-current="page"' : '' ?>
       >
@@ -73,58 +72,57 @@ $isHR = $user['role'] === 'hr';
       </a>
     <?php endif; ?>
 
-    <!-- LEARNING & GROWTH -->
-    <p class="nav-label second-label">LEARNING & GROWTH</p>
+    <p class="nav-label second-label">LEARNING &amp; GROWTH</p>
 
     <a
-      href="?page=training"
+      href="index.php?page=training"
       class="nav-link <?= $active === 'training' ? 'active' : '' ?>"
-      <?= $active === 'training' ? 'aria-current="page"' : '' ?>>
+      <?= $active === 'training' ? 'aria-current="page"' : '' ?>
+    >
       <i data-lucide="graduation-cap"></i>
       <span>Training Programs</span>
     </a>
 
     <a
-      href="?page=available-training"
+      href="index.php?page=available-training"
       class="nav-link <?= $active === 'available-training' ? 'active' : '' ?>"
-      <?= $active === 'available-training' ? 'aria-current="page"' : '' ?>>
+      <?= $active === 'available-training' ? 'aria-current="page"' : '' ?>
+    >
       <i data-lucide="calendar-check"></i>
       <span>Available Training</span>
     </a>
 
     <a
-      class="nav-link <?= ($page ?? '') === 'performance' ? 'active' : '' ?>"
-      href="?page=performance">
+      class="nav-link <?= $active === 'performance' ? 'active' : '' ?>"
+      href="index.php?page=performance"
+      <?= $active === 'performance' ? 'aria-current="page"' : '' ?>
+    >
       <i data-lucide="clipboard-check"></i>
-
-      <span>
-        Performance Evaluation
-      </span>
-
-      <?php if (($page ?? '') === 'performance'): ?>
-        <span class="active-dot"></span>
-      <?php endif; ?>
+      <span>Performance Evaluation</span>
     </a>
 
-    <a
-      href="#"
-      class="nav-link <?= $active === 'competencies' ? 'active' : '' ?>"
-      <?= $active === 'competencies' ? 'aria-current="page"' : '' ?>>
-      <i data-lucide="brain"></i>
-      <span>Competencies</span>
-    </a>
+    <?php if ($isHR): ?>
+      <a
+        href="certifications.php"
+        class="nav-link <?= $active === 'certifications' ? 'active' : '' ?>"
+        <?= $active === 'certifications' ? 'aria-current="page"' : '' ?>
+      >
+        <i data-lucide="award"></i>
+        <span>Certifications</span>
+      </a>
+    <?php endif; ?>
 
     <a
       href="#"
       class="nav-link <?= $active === 'analytics' ? 'active' : '' ?>"
-      <?= $active === 'analytics' ? 'aria-current="page"' : '' ?>>
+      <?= $active === 'analytics' ? 'aria-current="page"' : '' ?>
+    >
       <i data-lucide="chart-no-axes-column-increasing"></i>
       <span>Analytics</span>
     </a>
 
   </nav>
 
-  <!-- BOTTOM ACCOUNT -->
   <div class="sidebar-bottom">
 
     <div class="sidebar-user">
@@ -142,12 +140,14 @@ $isHR = $user['role'] === 'hr';
 
     <form
       method="post"
-      action="?page=logout"
-      class="sidebar-logout-form">
+      action="index.php?page=logout"
+      class="sidebar-logout-form"
+    >
       <input
         type="hidden"
         name="csrf"
-        value="<?= e(csrf_token()) ?>">
+        value="<?= e(csrf_token()) ?>"
+      >
 
       <button type="submit" class="sidebar-logout-btn">
         <i data-lucide="log-out"></i>

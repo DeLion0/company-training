@@ -939,3 +939,236 @@ body.av-modal-open {
     transition: none;
   }
 }
+
+
+/* =========================================================
+   Training lifecycle: Available / History
+   ========================================================= */
+
+.av-lifecycle-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0 20px;
+  padding: 5px;
+  border: 1px solid #dbe8de;
+  border-radius: 12px;
+  background: #f4f8f5;
+}
+
+.av-lifecycle-tab {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #6e8374;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.av-lifecycle-tab svg {
+  width: 15px;
+  height: 15px;
+}
+
+.av-lifecycle-tab b {
+  min-width: 20px;
+  height: 20px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #e4ede6;
+  color: #526b59;
+  font-size: 9px;
+}
+
+.av-lifecycle-tab.active {
+  background: #ffffff;
+  color: #236a43;
+  box-shadow: 0 3px 12px rgba(28, 76, 48, .08);
+}
+
+.av-lifecycle-tab.active b {
+  background: #e8f5ec;
+  color: #287c4b;
+}
+
+.av-history-panel[hidden],
+[data-av-lifecycle-panel][hidden] {
+  display: none !important;
+}
+
+.av-history-toolbar {
+  margin-top: 2px;
+}
+
+.av-pill-history {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #eef2ef;
+  color: #5f7165;
+}
+
+.av-pill-history svg {
+  width: 12px;
+  height: 12px;
+}
+
+.av-history-card {
+  border-color: #dfe7e1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(248, 250, 248, .96),
+      rgba(255, 255, 255, 1)
+    );
+}
+
+.av-history-card .av-description {
+  min-height: 42px;
+}
+
+.av-history-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  margin-top: 15px;
+}
+
+.av-history-stats > div {
+  padding: 10px;
+  border: 1px solid #e2ebe4;
+  border-radius: 10px;
+  background: #f8fbf9;
+}
+
+.av-history-stats span {
+  display: block;
+  color: #87978c;
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.av-history-stats strong {
+  display: block;
+  margin-top: 3px;
+  color: #2e4c38;
+  font-size: 16px;
+}
+
+.av-history-readonly {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 13px;
+  padding-top: 12px;
+  border-top: 1px solid #e5ece7;
+  color: #819188;
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.av-history-readonly svg {
+  width: 13px;
+  height: 13px;
+}
+
+.av-history-empty {
+  min-height: 210px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.av-history-empty > svg {
+  width: 28px;
+  height: 28px;
+  color: #779083;
+}
+
+.av-history-empty strong {
+  color: #3f5d49;
+  font-size: 13px;
+}
+
+.av-history-empty span {
+  color: #88988e;
+  font-size: 10px;
+}
+
+@media (max-width: 760px) {
+  .av-lifecycle-tabs {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .av-lifecycle-tab {
+    justify-content: center;
+  }
+
+  .av-history-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Training History tab divider V1 */
+
+.av-lifecycle-tabs {
+  position: relative;
+  gap: 0;
+  padding: 5px;
+}
+
+.av-lifecycle-tab {
+  position: relative;
+  padding-left: 14px;
+  padding-right: 14px;
+}
+
+.av-lifecycle-tab + .av-lifecycle-tab {
+  margin-left: 10px;
+}
+
+.av-lifecycle-tab + .av-lifecycle-tab::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: 7px;
+  bottom: 7px;
+  width: 1px;
+  background: #cfded3;
+  border-radius: 999px;
+}
+
+.av-lifecycle-tab.active + .av-lifecycle-tab::before,
+.av-lifecycle-tab + .av-lifecycle-tab.active::before {
+  background: #c5d8cb;
+}
+
+@media (max-width: 760px) {
+  .av-lifecycle-tabs {
+    gap: 0;
+  }
+
+  .av-lifecycle-tab + .av-lifecycle-tab {
+    margin-left: 10px;
+  }
+}
+
+/* Mandatory Training Escalation V1 */
+.av-status.mandatory {
+  background: #fff0ec;
+  color: #a9432f;
+  border: 1px solid #f1c7bd;
+}

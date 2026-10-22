@@ -106,11 +106,25 @@ function employee_portal_link(
             <span>My Performance</span>
         </a>
 
-        <a href="#" class="employee-nav-link is-disabled" aria-disabled="true">
-            <i data-lucide="brain"></i>
-            <span>Competencies</span>
-            <small>Soon</small>
-        </a>
+        <?php if ($employeePortalPreview): ?>
+            <a
+                href="#"
+                class="employee-nav-link is-disabled"
+                aria-disabled="true"
+            >
+                <i data-lucide="award"></i>
+                <span>My Certificates</span>
+            </a>
+        <?php else: ?>
+            <a
+                href="employee-certificates.php"
+                class="employee-nav-link <?= $currentModule === 'certificates' ? 'active' : '' ?>"
+                <?= $currentModule === 'certificates' ? 'aria-current="page"' : '' ?>
+            >
+                <i data-lucide="award"></i>
+                <span>My Certificates</span>
+            </a>
+        <?php endif; ?>
 
         <p class="employee-nav-label second">ACCOUNT</p>
 

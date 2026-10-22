@@ -7,3 +7,8 @@
 /.vscode/
 *.log
 .DS_Store
+*.bak-*
+/patch_files/
+/README-FIRST.txt
+/tools/apply-*-v*.php
+/tools/rollback-*-v*.php

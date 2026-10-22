@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/database.php';
+require_once __DIR__ . '/training-lifecycle.php';
 
 function employee_preview_company_id(int $actorId): int
 {
@@ -121,6 +122,13 @@ function employee_preview_data(
     $employeeId = (int) $employee['id'];
     $departmentId = (int) $employee['department_id'];
 
+    /*
+     * Store/compare training schedules as local Asia/Manila wall time.
+     * This avoids Railway/server timezone differences.
+     */
+    $lifecycleNow =
+        training_lifecycle_now_string();
+
     $months = employee_preview_months(6);
     $firstMonth = $months[0]['key'] . '-01';
 
@@ -204,10 +212,16 @@ function employee_preview_data(
            AND p.company_id = ?
            AND p.status = 'published'
            AND ta.status = 'recommended'
-           AND p.range_end >= CURRENT_DATE()
+           AND (
+                SELECT MAX(
+                    TIMESTAMP(sx.session_date, sx.end_time)
+                )
+                FROM training_sessions sx
+                WHERE sx.program_id = p.id
+           ) >= ?
          ORDER BY p.range_start, p.id"
     );
-    $priorityQuery->execute([$employeeId, $companyId]);
+    $priorityQuery->execute([$employeeId, $companyId, $lifecycleNow]);
     $priorityTrainings = $priorityQuery->fetchAll(PDO::FETCH_ASSOC);
 
     $recommendedQuery = $db->prepare(
@@ -242,9 +256,16 @@ function employee_preview_data(
            AND p.company_id = ?
            AND p.status = 'published'
            AND ta.status = 'recommended'
+           AND (
+                SELECT MAX(
+                    TIMESTAMP(sx.session_date, sx.end_time)
+                )
+                FROM training_sessions sx
+                WHERE sx.program_id = p.id
+           ) >= ?
          ORDER BY COALESCE(trm.priority, 0) DESC, p.range_start, p.id"
     );
-    $recommendedQuery->execute([$employeeId, $companyId]);
+    $recommendedQuery->execute([$employeeId, $companyId, $lifecycleNow]);
     $recommendedTrainings = $recommendedQuery->fetchAll(PDO::FETCH_ASSOC);
 
     $joinedQuery = $db->prepare(
@@ -258,8 +279,16 @@ function employee_preview_data(
             p.range_start,
             p.range_end,
             p.capacity,
+            (
+                SELECT MAX(
+                    TIMESTAMP(sx.session_date, sx.end_time)
+                )
+                FROM training_sessions sx
+                WHERE sx.program_id = p.id
+            ) AS last_session_at,
             ta.status,
             ta.source,
+            trm.recommendation_kind,
             (
                 SELECT COUNT(*)
                 FROM training_applications x
@@ -269,6 +298,8 @@ function employee_preview_data(
          FROM training_applications ta
          JOIN training_programs p
            ON p.id = ta.program_id
+         LEFT JOIN training_recommendation_meta trm
+           ON trm.application_id = ta.id
          WHERE ta.employee_id = ?
            AND p.company_id = ?
            AND p.status = 'published'
@@ -280,11 +311,19 @@ function employee_preview_data(
 
     $joinedActive = [];
     $joinedCompleted = [];
-    $today = new DateTimeImmutable('today');
+    $now = training_lifecycle_now();
 
     foreach ($joinedTrainings as $training) {
-        $end = new DateTimeImmutable((string) $training['range_end']);
-        if ($end < $today) {
+        $end =
+            training_lifecycle_parse_last_session(
+                (string) (
+                    $training['last_session_at']
+                    ?? ''
+                ),
+                (string) $training['range_end']
+            );
+
+        if ($end !== null && $end < $now) {
             $joinedCompleted[] = $training;
         } else {
             $joinedActive[] = $training;
@@ -305,6 +344,8 @@ function employee_preview_data(
             ta.status AS application_status,
             ta.source AS application_source,
             COALESCE(trm.priority, 0) AS priority,
+
+            trm.recommendation_kind,
             trm.performance_score,
             trm.performance_month,
             (
@@ -319,10 +360,15 @@ function employee_preview_data(
           AND ta.employee_id = ?
          LEFT JOIN training_recommendation_meta trm
            ON trm.application_id = ta.id
-          AND trm.recommendation_kind = 'low_performance'
          WHERE p.company_id = ?
            AND p.status = 'published'
-           AND p.range_end >= CURRENT_DATE()
+           AND (
+                SELECT MAX(
+                    TIMESTAMP(sx.session_date, sx.end_time)
+                )
+                FROM training_sessions sx
+                WHERE sx.program_id = p.id
+           ) >= ?
            AND (
                 NOT EXISTS (
                     SELECT 1
@@ -338,7 +384,7 @@ function employee_preview_data(
            )
          ORDER BY COALESCE(trm.priority, 0) DESC, p.range_start, p.id"
     );
-    $availableQuery->execute([$employeeId, $companyId, $departmentId]);
+    $availableQuery->execute([$employeeId, $companyId, $lifecycleNow, $departmentId]);
     $availableTrainings = $availableQuery->fetchAll(PDO::FETCH_ASSOC);
 
     $sessionQuery = $db->prepare(
@@ -359,11 +405,11 @@ function employee_preview_data(
            AND p.company_id = ?
            AND p.status = 'published'
            AND ta.status = 'joined'
-           AND s.session_date >= CURRENT_DATE()
+           AND TIMESTAMP(s.session_date, s.end_time) >= ?
          ORDER BY s.session_date, s.start_time
          LIMIT 20"
     );
-    $sessionQuery->execute([$employeeId, $companyId]);
+    $sessionQuery->execute([$employeeId, $companyId, $lifecycleNow]);
     $upcomingSessions = $sessionQuery->fetchAll(PDO::FETCH_ASSOC);
 
     return [

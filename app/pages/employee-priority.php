@@ -62,8 +62,8 @@ $latestScore = $latest ? (float)$latest['score'] : null;
                     </div>
 
                     <div class="employee-card-actions">
-                        <button type="button" class="employee-button is-secondary" data-ui-only="details">View Details</button>
-                        <button type="button" class="employee-button is-primary" data-ui-only="join" <?= $openSlots < 1 ? 'disabled' : '' ?>>Join Training <i data-lucide="arrow-right"></i></button>
+                        <button type="button" class="employee-button is-secondary" data-training-details="<?= (int)$training['id'] ?>">View Details</button>
+                        <button type="button" class="employee-button is-primary" data-join-training="<?= (int)$training['id'] ?>" <?= $openSlots < 1 ? 'disabled' : '' ?>>Join Training <i data-lucide="arrow-right"></i></button>
                     </div>
                 </article>
             <?php endforeach; ?>

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/database.php';
+require_once __DIR__ . '/performance-rules.php';
 
 const TRAINING_PRIORITY_THRESHOLD = 50.0;
 
@@ -332,7 +333,8 @@ function training_create_priority_recommendations(
         array_fill(0, count($departmentIds), '?')
     );
 
-    $monthlySql = training_latest_monthly_performance_sql();
+    $monthlySql =
+        training_latest_monthly_performance_sql();
 
     $params = array_merge(
         [$companyId],
@@ -360,7 +362,8 @@ function training_create_priority_recommendations(
     );
 
     $q->execute($params);
-    $candidates = $q->fetchAll(PDO::FETCH_ASSOC);
+    $candidates =
+        $q->fetchAll(PDO::FETCH_ASSOC);
 
     if (!$candidates) {
         return 0;
@@ -378,7 +381,7 @@ function training_create_priority_recommendations(
             ?,
             ?,
             'hr_recommendation',
-            'recommended',
+            ?,
             ?,
             ?
          )"
@@ -393,7 +396,7 @@ function training_create_priority_recommendations(
             performance_month
          ) VALUES (
             ?,
-            'low_performance',
+            ?,
             1,
             ?,
             ?
@@ -403,30 +406,65 @@ function training_create_priority_recommendations(
     $created = 0;
 
     foreach ($candidates as $candidate) {
+        $employeeId =
+            (int) $candidate['employee_id'];
+
         $score = round(
             (float) $candidate['average_score'],
             2
         );
 
-        $month = (string) $candidate['month_key'];
+        $month =
+            (string) $candidate['month_key'];
 
-        $note = sprintf(
-            'Priority recommendation: latest monthly performance is %.2f%% (%s), below the 50%% threshold.',
-            $score,
-            $month
-        );
+        $streak =
+            growflow_low_performance_streak(
+                $db,
+                $companyId,
+                $employeeId,
+                TRAINING_PRIORITY_THRESHOLD
+            );
+
+        $mandatory =
+            !empty($streak['mandatory']);
+
+        if ($mandatory) {
+            $status = 'joined';
+            $kind =
+                'mandatory_low_performance';
+
+            $note = sprintf(
+                'Mandatory training: %d consecutive monthly performance ratings below 50%% (%s to %s). Latest score %.2f%%.',
+                (int) $streak['count'],
+                (string) $streak['start_month'],
+                (string) $streak['end_month'],
+                $score
+            );
+        } else {
+            $status = 'recommended';
+            $kind = 'low_performance';
+
+            $note = sprintf(
+                'Priority recommendation: latest monthly performance is %.2f%% (%s), below the 50%% threshold.',
+                $score,
+                $month
+            );
+        }
 
         $applicationInsert->execute([
             $programId,
-            (int) $candidate['employee_id'],
+            $employeeId,
+            $status,
             $actorId,
             $note,
         ]);
 
-        $applicationId = (int) $db->lastInsertId();
+        $applicationId =
+            (int) $db->lastInsertId();
 
         $metaInsert->execute([
             $applicationId,
+            $kind,
             $score,
             $month,
         ]);

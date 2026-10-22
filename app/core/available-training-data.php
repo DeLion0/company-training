@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/training-data.php';
+require_once __DIR__ . '/training-lifecycle.php';
 
 function available_training_data(int $actor): array
 {
@@ -13,7 +14,9 @@ function available_training_data(int $actor): array
         "SELECT
             p.*,
             (SELECT COUNT(*) FROM training_applications a WHERE a.program_id = p.id AND a.status = 'joined') AS joined_count,
-            (SELECT COUNT(*) FROM training_applications a WHERE a.program_id = p.id AND a.status = 'recommended') AS recommended_count
+            (SELECT COUNT(*) FROM training_applications a WHERE a.program_id = p.id AND a.status = 'recommended') AS recommended_count,
+            (SELECT COUNT(*) FROM training_attendance att WHERE att.program_id = p.id) AS attendance_count,
+            (SELECT COUNT(*) FROM training_certificates tc WHERE tc.program_id = p.id AND tc.status = 'issued') AS certificate_count
          FROM training_programs p
          WHERE p.company_id = ?
            AND p.status = 'published'
@@ -44,6 +47,7 @@ function available_training_data(int $actor): array
             a.source,
             a.status,
             a.created_at,
+            trm.recommendation_kind,
             e.full_name,
             e.employee_code,
             e.job_title,
@@ -55,6 +59,8 @@ function available_training_data(int $actor): array
          FROM training_applications a
          JOIN training_programs p
            ON p.id = a.program_id
+         LEFT JOIN training_recommendation_meta trm
+           ON trm.application_id = a.id
          JOIN employees e
            ON e.id = a.employee_id
           AND e.company_id = p.company_id
@@ -150,16 +156,63 @@ function available_training_data(int $actor): array
     $departmentStmt->execute([$companyId]);
     $departments = $departmentStmt->fetchAll(PDO::FETCH_ASSOC);
 
+    $activePrograms = [];
+    $historyPrograms = [];
+
     foreach ($programs as &$program) {
         $programId = (int) $program['id'];
-        $program['sessions'] = $sessions[$programId] ?? [];
-        $program['participants'] = $participants[$programId] ?? [];
-        $program['open_slots'] = max(0, (int) $program['capacity'] - (int) $program['joined_count']);
+
+        $program['sessions'] =
+            $sessions[$programId] ?? [];
+
+        $program['participants'] =
+            $participants[$programId] ?? [];
+
+        $program['open_slots'] = max(
+            0,
+            (int) $program['capacity']
+            - (int) $program['joined_count']
+        );
+
+        $lastSessionAt =
+            training_lifecycle_end_from_sessions(
+                (array) $program['sessions'],
+                (string) $program['range_end']
+            );
+
+        $program['last_session_at'] =
+            $lastSessionAt?->format('Y-m-d H:i:s');
+
+        $ended =
+            training_lifecycle_has_ended_from_sessions(
+                (array) $program['sessions'],
+                (string) $program['range_end']
+            );
+
+        $program['lifecycle_status'] =
+            $ended ? 'history' : 'available';
+
+        if ($ended) {
+            $historyPrograms[] = $program;
+        } else {
+            $activePrograms[] = $program;
+        }
     }
     unset($program);
 
+    usort(
+        $historyPrograms,
+        static function (array $a, array $b): int {
+            return strcmp(
+                (string) ($b['last_session_at'] ?? ''),
+                (string) ($a['last_session_at'] ?? '')
+            );
+        }
+    );
+
     return [
-        'programs' => $programs,
+        'programs' => $activePrograms,
+        'history_programs' => $historyPrograms,
         'employees' => $employees,
         'departments' => $departments,
     ];
@@ -187,6 +240,17 @@ function available_training_recommend(int $actor, array $input): void
     $program = $programStmt->fetch(PDO::FETCH_ASSOC);
     if (!$program) {
         throw new InvalidArgumentException('Training program was not found.');
+    }
+
+    if (
+        training_lifecycle_program_has_ended(
+            $db,
+            $programId
+        )
+    ) {
+        throw new InvalidArgumentException(
+            'This training program has already ended and is now in Training History.'
+        );
     }
 
     $employeeStmt = $db->prepare(
@@ -254,6 +318,17 @@ function available_training_join_employee(int $employeeId, int $programId): void
 
         if (!$program || $program['status'] !== 'published') {
             throw new InvalidArgumentException('Training program is not available.');
+        }
+
+        if (
+            training_lifecycle_program_has_ended(
+                $db,
+                $programId
+            )
+        ) {
+            throw new InvalidArgumentException(
+                'This training program has already ended.'
+            );
         }
 
         $joinedStmt = $db->prepare(

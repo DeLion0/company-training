@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/database.php';
+require_once __DIR__ . '/performance-rules.php';
 
 const PERFORMANCE_PRIORITY_THRESHOLD = 50.0;
 const PERFORMANCE_IMPORT_MAX_ROWS = 1000;
@@ -202,10 +203,11 @@ function performance_sync_training_priority(
     float $score,
     int $actorId
 ): void {
-    // Always synchronize from the employee's LATEST official monthly rating.
-    //
-    // This prevents editing an older historical month from incorrectly
-    // changing today's training priority state.
+    /*
+     * Always re-evaluate from the latest official performance history.
+     * This also means editing one of the latest 3 months immediately
+     * recalculates the mandatory streak.
+     */
     $latestQuery = $db->prepare(
         "SELECT
             review_month,
@@ -224,10 +226,9 @@ function performance_sync_training_priority(
         $employeeId,
     ]);
 
-    $latest =
-        $latestQuery->fetch(
-            PDO::FETCH_ASSOC
-        );
+    $latest = $latestQuery->fetch(
+        PDO::FETCH_ASSOC
+    );
 
     if (!$latest) {
         return;
@@ -239,6 +240,16 @@ function performance_sync_training_priority(
     $score =
         (float) $latest['score'];
 
+    $streak = growflow_low_performance_streak(
+        $db,
+        $companyId,
+        $employeeId,
+        PERFORMANCE_PRIORITY_THRESHOLD
+    );
+
+    $mandatory =
+        !empty($streak['mandatory']);
+
     $employee = performance_employee(
         $companyId,
         $employeeId
@@ -247,6 +258,17 @@ function performance_sync_training_priority(
     $departmentId =
         (int) $employee['department_id'];
 
+    /*
+     * Keep the current active-program rule compatible with the existing
+     * Training History lifecycle. Use actual sessions when available.
+     */
+    $activeNow = (
+        new DateTimeImmutable(
+            'now',
+            new DateTimeZone('Asia/Manila')
+        )
+    )->format('Y-m-d H:i:s');
+
     $q = $db->prepare(
         "SELECT p.id
          FROM training_programs p
@@ -254,13 +276,29 @@ function performance_sync_training_priority(
            ON tpd.program_id = p.id
          WHERE p.company_id = ?
            AND p.status = 'published'
-           AND p.range_end >= CURRENT_DATE()
+           AND COALESCE(
+                (
+                    SELECT MAX(
+                        TIMESTAMP(
+                            sx.session_date,
+                            sx.end_time
+                        )
+                    )
+                    FROM training_sessions sx
+                    WHERE sx.program_id = p.id
+                ),
+                TIMESTAMP(
+                    p.range_end,
+                    '23:59:59'
+                )
+           ) >= ?
            AND tpd.department_id = ?
          ORDER BY p.id"
     );
 
     $q->execute([
         $companyId,
+        $activeNow,
         $departmentId,
     ]);
 
@@ -301,13 +339,32 @@ function performance_sync_training_priority(
             ?,
             ?,
             'hr_recommendation',
-            'recommended',
+            ?,
             ?,
             ?
          )"
     );
 
-    $upsertMeta = $db->prepare(
+    $updateMandatoryApplication = $db->prepare(
+        "UPDATE training_applications
+         SET
+            status = 'joined',
+            source = CASE
+                WHEN source = 'employee'
+                THEN source
+                ELSE 'hr_recommendation'
+            END,
+            submitted_by = CASE
+                WHEN source = 'employee'
+                THEN submitted_by
+                ELSE ?
+            END,
+            review_notes = ?,
+            updated_at = CURRENT_TIMESTAMP
+         WHERE id = ?"
+    );
+
+    $upsertPriorityMeta = $db->prepare(
         "INSERT INTO training_recommendation_meta (
             application_id,
             recommendation_kind,
@@ -323,6 +380,28 @@ function performance_sync_training_priority(
          )
          ON DUPLICATE KEY UPDATE
             recommendation_kind = 'low_performance',
+            priority = 1,
+            performance_score = VALUES(performance_score),
+            performance_month = VALUES(performance_month),
+            updated_at = CURRENT_TIMESTAMP"
+    );
+
+    $upsertMandatoryMeta = $db->prepare(
+        "INSERT INTO training_recommendation_meta (
+            application_id,
+            recommendation_kind,
+            priority,
+            performance_score,
+            performance_month
+         ) VALUES (
+            ?,
+            'mandatory_low_performance',
+            1,
+            ?,
+            ?
+         )
+         ON DUPLICATE KEY UPDATE
+            recommendation_kind = 'mandatory_low_performance',
             priority = 1,
             performance_score = VALUES(performance_score),
             performance_month = VALUES(performance_month),
@@ -345,11 +424,8 @@ function performance_sync_training_priority(
            AND recommendation_kind = 'low_performance'"
     );
 
-    $monthKey = substr(
-        $reviewMonth,
-        0,
-        7
-    );
+    $monthKey =
+        substr($reviewMonth, 0, 7);
 
     foreach ($programIds as $programId) {
         $findApplication->execute([
@@ -362,6 +438,57 @@ function performance_sync_training_priority(
                 PDO::FETCH_ASSOC
             );
 
+        /*
+         * ESCALATION:
+         * 3+ consecutive calendar months below 50
+         * => mandatory + automatic enrollment.
+         *
+         * This deliberately overrides a previous Declined state.
+         */
+        if ($mandatory) {
+            $note = sprintf(
+                'Mandatory training: %d consecutive monthly performance ratings below 50%% (%s to %s). Latest score %.2f%%.',
+                (int) $streak['count'],
+                (string) $streak['start_month'],
+                (string) $streak['end_month'],
+                $score
+            );
+
+            if (!$application) {
+                $insertApplication->execute([
+                    $programId,
+                    $employeeId,
+                    'joined',
+                    $actorId,
+                    $note,
+                ]);
+
+                $applicationId =
+                    (int) $db->lastInsertId();
+            } else {
+                $applicationId =
+                    (int) $application['id'];
+
+                $updateMandatoryApplication->execute([
+                    $actorId,
+                    $note,
+                    $applicationId,
+                ]);
+            }
+
+            $upsertMandatoryMeta->execute([
+                $applicationId,
+                $score,
+                $monthKey,
+            ]);
+
+            continue;
+        }
+
+        /*
+         * Normal priority behavior: latest score below 50 but mandatory
+         * streak has not reached 3 consecutive months.
+         */
         if ($score < PERFORMANCE_PRIORITY_THRESHOLD) {
             if (!$application) {
                 $note = sprintf(
@@ -373,6 +500,7 @@ function performance_sync_training_priority(
                 $insertApplication->execute([
                     $programId,
                     $employeeId,
+                    'recommended',
                     $actorId,
                     $note,
                 ]);
@@ -380,7 +508,7 @@ function performance_sync_training_priority(
                 $applicationId =
                     (int) $db->lastInsertId();
 
-                $upsertMeta->execute([
+                $upsertPriorityMeta->execute([
                     $applicationId,
                     $score,
                     $monthKey,
@@ -389,18 +517,32 @@ function performance_sync_training_priority(
                 continue;
             }
 
-            // Employee already joined/declined: keep participation state.
+            /*
+             * Never downgrade a previously-triggered mandatory assignment.
+             * Also keep already-joined participation untouched.
+             */
             if (
-                in_array(
-                    (string) $application['status'],
-                    ['joined', 'declined'],
-                    true
-                )
+                (string) (
+                    $application['recommendation_kind']
+                    ?? ''
+                ) === 'mandatory_low_performance'
+                || (string) $application['status'] === 'joined'
             ) {
                 continue;
             }
 
-            $upsertMeta->execute([
+            /*
+             * Normal declined optional recommendation remains declined
+             * until/unless the 3-month mandatory rule is triggered.
+             */
+            if (
+                (string) $application['status']
+                === 'declined'
+            ) {
+                continue;
+            }
+
+            $upsertPriorityMeta->execute([
                 (int) $application['id'],
                 $score,
                 $monthKey,
@@ -410,6 +552,20 @@ function performance_sync_training_priority(
         }
 
         if (!$application) {
+            continue;
+        }
+
+        /*
+         * Mandatory assignments are sticky for the specific program.
+         * A later improved score does not unassign a program that was
+         * already made mandatory.
+         */
+        if (
+            (string) (
+                $application['recommendation_kind']
+                ?? ''
+            ) === 'mandatory_low_performance'
+        ) {
             continue;
         }
 
@@ -427,8 +583,6 @@ function performance_sync_training_priority(
                 'Priority recommendation:'
             );
 
-        // Delete the whole application only when the system itself
-        // created it as a low-performance recommendation.
         if ($isAutomaticLowPerformanceRecommendation) {
             $deleteRecommendedApplication->execute([
                 (int) $application['id'],
@@ -437,11 +591,6 @@ function performance_sync_training_priority(
             continue;
         }
 
-        // If a manual HR recommendation already existed and merely gained
-        // a low-performance priority marker, keep the recommendation and
-        // remove only the automatic marker.
-        //
-        // Joined / declined participation is also preserved.
         $deletePriorityMeta->execute([
             (int) $application['id'],
         ]);

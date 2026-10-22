@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../app/core/auth.php';
 require_once __DIR__ . '/../app/core/employee-preview-data.php';
+require_once __DIR__ . '/../app/core/employee-actions.php';
 
 secure_session_start();
 
@@ -68,13 +69,14 @@ $employeePortalPreview = true;
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="assets/css/employee-portal.css?v=20261015-1">
-    <link rel="stylesheet" href="assets/css/employee-dashboard.css?v=20261015-1">
+    <link rel="stylesheet" href="assets/css/employee-dashboard.css?v=20261022-mandatory1">
+    <link rel="stylesheet" href="assets/css/employee-functions-v1.css?v=20261022-1">
 
     <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-    <script defer src="assets/js/employee-portal.js?v=20261015-1"></script>
+    <script defer src="assets/js/employee-portal.js?v=20261022-functions1"></script>
 </head>
 
-<body class="employee-portal-page">
+<body class="employee-portal-page" data-employee-preview="1">
 <?php if (empty($employeePortalData['employee'])): ?>
     <div class="employee-preview-empty">
         <i data-lucide="users"></i>
@@ -102,6 +104,8 @@ $employeePortalPreview = true;
             <?php require __DIR__ . '/../app/pages/' . $allowedModules[$employeeModule]; ?>
         </div>
     </div>
+
+    <?php require __DIR__ . '/../app/partials/employee-training-dialog.php'; ?>
 
     <div class="employee-toast" id="employeeToast" role="status" aria-live="polite"></div>
 <?php endif; ?>

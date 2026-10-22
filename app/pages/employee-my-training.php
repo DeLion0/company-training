@@ -36,10 +36,11 @@ $sessions = $employeePortalData['upcoming_sessions'];
         <?php if ($joinedActive): ?>
             <div class="employee-my-training-grid">
                 <?php foreach ($joinedActive as $training): ?>
-                    <article class="employee-my-training-card">
+                    <?php $isMandatory = (string)($training['recommendation_kind'] ?? '') === 'mandatory_low_performance'; ?>
+                    <article class="employee-my-training-card <?= $isMandatory ? 'is-mandatory' : '' ?>">
                         <div class="employee-my-training-card-head">
                             <span class="employee-my-training-icon"><i data-lucide="graduation-cap"></i></span>
-                            <span class="employee-status-pill is-joined">Joined</span>
+                            <span class="employee-status-pill <?= $isMandatory ? 'is-mandatory' : 'is-joined' ?>"><?= $isMandatory ? 'Mandatory Training' : 'Joined' ?></span>
                         </div>
 
                         <h2><?= e((string)$training['title']) ?></h2>
@@ -51,7 +52,7 @@ $sessions = $employeePortalData['upcoming_sessions'];
                             <span><i data-lucide="map-pin"></i><?= e((string)$training['venue']) ?></span>
                         </div>
 
-                        <button type="button" class="employee-button is-secondary full" data-ui-only="details">View Program Details</button>
+                        <button type="button" class="employee-button is-secondary full" data-training-details="<?= (int)$training['id'] ?>">View Program Details</button>
                     </article>
                 <?php endforeach; ?>
             </div>
@@ -117,8 +118,8 @@ $sessions = $employeePortalData['upcoming_sessions'];
                         </div>
 
                         <div class="employee-card-actions">
-                            <button type="button" class="employee-button is-secondary" data-ui-only="details">View Details</button>
-                            <button type="button" class="employee-button is-primary" data-ui-only="join">Join Training <i data-lucide="arrow-right"></i></button>
+                            <button type="button" class="employee-button is-secondary" data-training-details="<?= (int)$training['id'] ?>">View Details</button>
+                            <button type="button" class="employee-button is-primary" data-join-training="<?= (int)$training['id'] ?>">Join Training <i data-lucide="arrow-right"></i></button>
                         </div>
                     </article>
                 <?php endforeach; ?>
