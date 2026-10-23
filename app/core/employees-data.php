@@ -150,7 +150,7 @@ function employee_domain(): string
         trim(
             db_env(
                 'WORK_EMAIL_DOMAIN',
-                'company.com'
+                'growflow.com'
             )
         )
     );
@@ -774,3 +774,4 @@ function hr_create_employee(
         'Could not assign a unique login email.'
     );
 }
+

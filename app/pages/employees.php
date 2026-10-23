@@ -602,7 +602,7 @@ unset($_SESSION['employee_created']);
                         <input
                             id="emp-email-preview"
                             readonly
-                            placeholder="firstname.lastname@company.com"
+                            placeholder="firstname.lastname@growflow.com"
                         >
                     </label>
 
@@ -663,3 +663,4 @@ window.GROWFLOW_EMPLOYEE_DOMAIN =
 </script>
 
 <script defer src="assets/js/employees.js"></script>
+
