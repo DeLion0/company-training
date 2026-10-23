@@ -54,6 +54,12 @@
         ></script>
     <?php endif; ?>
 
+    <!-- ANALYTICS ONLY -->
+    <?php if (($page ?? '') === 'analytics'): ?>
+        <link rel="stylesheet" href="assets/css/analytics.css?v=20261023-1">
+        <script defer src="assets/js/analytics.js?v=20261023-1"></script>
+    <?php endif; ?>
+
     <!-- GLOBAL LIBRARIES -->
     <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 

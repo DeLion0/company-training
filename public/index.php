@@ -30,6 +30,7 @@ $allowed = [
     'employees',
     'departments',
     'managers',
+    'analytics',
     'login',
     'logout'
 ];
@@ -433,6 +434,18 @@ if ($action === 'departments') {
         // Prevent duplicate submissions on refresh.
         redirect_to('?page=departments');
         exit;
+    }
+}
+
+
+// ==========================================
+// HR ANALYTICS
+// ==========================================
+
+if ($action === 'analytics') {
+    if (($user['role'] ?? '') !== 'hr') {
+        http_response_code(403);
+        exit('Access denied. HR only.');
     }
 }
 

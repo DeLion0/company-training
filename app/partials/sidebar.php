@@ -114,14 +114,16 @@ $isHR = $user['role'] === 'hr';
       </a>
     <?php endif; ?>
 
-    <a
-      href="#"
-      class="nav-link <?= $active === 'analytics' ? 'active' : '' ?>"
-      <?= $active === 'analytics' ? 'aria-current="page"' : '' ?>
-    >
-      <i data-lucide="chart-no-axes-column-increasing"></i>
-      <span>Analytics</span>
-    </a>
+    <?php if ($isHR): ?>
+      <a
+        href="index.php?page=analytics"
+        class="nav-link <?= $active === 'analytics' ? 'active' : '' ?>"
+        <?= $active === 'analytics' ? 'aria-current="page"' : '' ?>
+      >
+        <i data-lucide="chart-no-axes-column-increasing"></i>
+        <span>Analytics</span>
+      </a>
+    <?php endif; ?>
 
   </nav>
 
