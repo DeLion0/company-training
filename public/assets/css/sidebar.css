@@ -349,3 +349,20 @@
   height: 17px;
   flex: 0 0 17px;
 }
+
+/* Grow/Flow client-provided brand mark */
+.sidebar .brand-client-logo {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  display: block;
+  object-fit: cover;
+  border-radius: 14px;
+  box-shadow:
+    0 4px 12px rgba(26, 69, 35, 0.1),
+    0 0 0 1px rgba(38, 116, 62, 0.08);
+}
+
+.sidebar .brand {
+  gap: 10px;
+}

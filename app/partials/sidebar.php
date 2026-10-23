@@ -6,16 +6,18 @@ $isHR = $user['role'] === 'hr';
 
 <aside class="sidebar" id="sidebar" aria-label="Main navigation">
 
-  <div class="brand">
-    <div class="brand-mark">
-      <i data-lucide="sprout"></i>
-    </div>
+<div class="brand">
+  <img
+    class="brand-client-logo"
+    src="assets/branding/growflow-client-logo.jpg"
+    alt="Grow/Flow"
+  >
 
-    <div class="brand-name">
-      Grow/<span>Flow</span>
-      <small>LEARNING MANAGEMENT</small>
-    </div>
+  <div class="brand-name">
+    Grow/<span>Flow</span>
+    <small>LEARNING MANAGEMENT</small>
   </div>
+</div>
 
   <div class="workspace">
     <div class="workspace-icon">G</div>

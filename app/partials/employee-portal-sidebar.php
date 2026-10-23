@@ -34,13 +34,18 @@ function employee_portal_link(
 ?>
 
 <aside class="employee-sidebar" id="employeeSidebar" aria-label="Employee navigation">
-    <div class="employee-brand">
-        <div class="employee-brand-mark"><i data-lucide="sprout"></i></div>
-        <div class="employee-brand-name">
-            Grow/<span>Flow</span>
-            <small>LEARNING MANAGEMENT</small>
-        </div>
+<div class="employee-brand">
+    <img
+        class="employee-brand-client-logo"
+        src="assets/branding/growflow-client-logo.jpg"
+        alt="Grow/Flow"
+    >
+
+    <div class="employee-brand-name">
+        Grow/<span>Flow</span>
+        <small>LEARNING MANAGEMENT</small>
     </div>
+</div>
 
     <div class="employee-workspace">
         <div class="employee-workspace-icon"><i data-lucide="briefcase-business"></i></div>
