@@ -2391,3 +2391,226 @@
     grid-template-columns: 1fr;
   }
 }
+
+.pb-rank-chip .pb-rank-value {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  margin-top: 3px;
+  color: #2f543d;
+  font:
+    800 20px Manrope,
+    sans-serif;
+  line-height: 1;
+}
+
+.pb-rank-chip .pb-rank-value b {
+  display: inline;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+}
+
+.pb-rank-chip .pb-rank-value small {
+  display: inline;
+  margin-left: 3px;
+  color: #97a49b;
+  font:
+    600 10px "DM Sans",
+    sans-serif;
+}
+
+/* =========================================================
+   MY GROWTH — compact sidebar stats
+   ========================================================= */
+
+.pb-employee-hero .pb-rank-chip {
+  width: 220px;
+  min-width: 220px;
+  min-height: 82px;
+  box-sizing: border-box;
+  padding: 13px 15px;
+}
+
+.pb-growth-stats {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.pb-growth-stats .pb-growth-stat-card {
+  min-height: 82px;
+  padding: 13px 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--pb-line);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.pb-growth-stat-card .pb-stat-icon {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  margin: 0;
+}
+
+.pb-growth-stat-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.pb-growth-stat-copy small {
+  display: block;
+  margin: 0 0 3px;
+  color: #8c9b91;
+  font-size: 7.5px;
+  line-height: 1.2;
+}
+
+.pb-growth-stat-copy strong {
+  display: block;
+  margin: 0;
+  color: #314e3a;
+  font:
+    800 20px Manrope,
+    sans-serif;
+  line-height: 1.1;
+}
+
+@media (max-width: 1200px) {
+  .pb-growth-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pb-employee-hero .pb-rank-chip {
+    width: 220px;
+    min-width: 220px;
+  }
+}
+
+@media (max-width: 720px) {
+  .pb-employee-hero .pb-rank-chip {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .pb-growth-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* My Growth — right stats fill the Growth Tree height */
+
+.pb-growth-grid {
+  align-items: stretch;
+}
+
+.pb-growth-grid > .pb-tree-panel {
+  height: 100%;
+}
+
+.pb-growth-grid > .pb-growth-stats {
+  height: 100%;
+  display: grid;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.pb-growth-grid > .pb-growth-stats > .pb-growth-stat-card {
+  width: 100%;
+  min-height: 0;
+  height: auto;
+
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  padding: 15px;
+
+  box-sizing: border-box;
+  border: 1px solid var(--pb-line);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.pb-growth-stat-card .pb-stat-icon {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  margin: 0;
+}
+
+.pb-growth-stat-copy {
+  min-width: 0;
+}
+
+.pb-growth-stat-copy small {
+  display: block;
+  margin: 0 0 5px;
+  color: #8c9b91;
+  font-size: 7.5px;
+}
+
+.pb-growth-stat-copy > strong {
+  display: block;
+  margin: 0;
+  color: #314e3a;
+  font:
+    800 20px/1 Manrope,
+    sans-serif;
+}
+
+.pb-growth-rank-value {
+  display: flex !important;
+  align-items: baseline;
+  gap: 3px;
+}
+
+.pb-growth-rank-value em {
+  color: #98a69d;
+  font:
+    600 9px "DM Sans",
+    sans-serif;
+  font-style: normal;
+}
+
+@media (max-width: 1200px) {
+  .pb-growth-grid > .pb-growth-stats {
+    height: auto;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: 82px;
+  }
+}
+
+@media (max-width: 720px) {
+  .pb-growth-grid > .pb-growth-stats {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, 82px);
+  }
+}
+
+/* My Growth — larger stat labels and values */
+
+.pb-growth-stat-copy small {
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.1px;
+}
+
+.pb-growth-stat-copy > strong {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.pb-growth-rank-value {
+  font-size: 24px !important;
+}
+
+.pb-growth-rank-value em {
+  font-size: 10px;
+}

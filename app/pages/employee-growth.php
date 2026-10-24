@@ -75,15 +75,6 @@ if ($growth !== null) {
       <h1>My Growth</h1>
       <p>Your progress grows with every point and badge posted by HR from your instructors.</p>
     </div>
-    <?php if ($growth !== null): ?>
-      <div class="pb-rank-chip">
-        <i data-lucide="trophy"></i>
-        <div>
-          <span>COMPANY RANK</span>
-          <strong>#<span id="pbGrowthRankTop"><?= (int)($growth['rank'] ?? 0) ?></span> <small>/<?= (int)$growth['employee_count'] ?></small></strong>
-        </div>
-      </div>
-    <?php endif; ?>
   </section>
 
   <?php if ($growth === null): ?>
@@ -152,11 +143,52 @@ if ($growth !== null) {
         </div>
       </article>
 
-      <aside class="pb-growth-stats">
-        <article><span class="pb-stat-icon is-green"><i data-lucide="sparkles"></i></span><small>Total Points</small><strong id="pbGrowthStatPoints"><?= number_format((int)$growth['total_points']) ?></strong></article>
-        <article><span class="pb-stat-icon is-purple"><i data-lucide="badge-check"></i></span><small>Badges Earned</small><strong id="pbGrowthStatBadges"><?= count($growth['badges']) ?></strong></article>
-        <article><span class="pb-stat-icon is-amber"><i data-lucide="trophy"></i></span><small>Company Rank</small><strong>#<span id="pbGrowthStatRank"><?= (int)($growth['rank'] ?? 0) ?></span></strong></article>
-      </aside>
+   <aside class="pb-growth-stats">
+
+  <article class="pb-growth-stat-card">
+    <span class="pb-stat-icon is-amber">
+      <i data-lucide="trophy"></i>
+    </span>
+
+    <div class="pb-growth-stat-copy">
+      <small>Company Rank</small>
+
+      <strong class="pb-growth-rank-value">
+        #<span id="pbGrowthRankTop"><?= (int)($growth['rank'] ?? 0) ?></span>
+        <em>/<?= (int)$growth['employee_count'] ?></em>
+      </strong>
+    </div>
+  </article>
+
+  <article class="pb-growth-stat-card">
+    <span class="pb-stat-icon is-green">
+      <i data-lucide="sparkles"></i>
+    </span>
+
+    <div class="pb-growth-stat-copy">
+      <small>Total Points</small>
+
+      <strong id="pbGrowthStatPoints">
+        <?= number_format((int)$growth['total_points']) ?>
+      </strong>
+    </div>
+  </article>
+
+  <article class="pb-growth-stat-card">
+    <span class="pb-stat-icon is-purple">
+      <i data-lucide="badge-check"></i>
+    </span>
+
+    <div class="pb-growth-stat-copy">
+      <small>Badges Earned</small>
+
+      <strong id="pbGrowthStatBadges">
+        <?= count($growth['badges']) ?>
+      </strong>
+    </div>
+  </article>
+
+</aside>
     </section>
 
     <section class="pb-panel pb-milestones-panel pb-milestones-art">
