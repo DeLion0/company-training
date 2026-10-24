@@ -31,7 +31,7 @@ if (
     $returnModule = (string)($_POST['return_module'] ?? 'home');
     $validReturnModules = [
         'home', 'priority', 'available', 'my-training',
-        'performance', 'profile', 'security',
+        'performance', 'growth', 'profile', 'security',
     ];
 
     if (!in_array($returnModule, $validReturnModules, true)) {
@@ -82,6 +82,7 @@ $allowedModules = [
     'available' => 'employee-available-training.php',
     'my-training' => 'employee-my-training.php',
     'performance' => 'employee-performance.php',
+    'growth' => 'employee-growth.php',
     'profile' => 'employee-profile.php',
     'security' => 'employee-security.php',
 ];
@@ -90,6 +91,64 @@ $employeeModule = (string)($_GET['module'] ?? 'home');
 
 if (!isset($allowedModules[$employeeModule])) {
     $employeeModule = 'home';
+}
+
+if ($employeeModule === 'growth' && isset($_GET['growth_status'])) {
+    require_once __DIR__ . '/../app/core/points-badges-data.php';
+
+    try {
+        $growthStatus = pb_employee_growth_for_user((int)$user['id']);
+        $growthTree = $growthStatus['tree'];
+        $growthAssets = [
+            0 => 'seed-hero.png',
+            1 => 'sprout.png',
+            2 => 'seedling.png',
+            3 => 'sapling.png',
+            4 => 'young-tree.png',
+            5 => 'flourishing-tree.png',
+            6 => 'full-growth.png',
+        ];
+        $growthStageIndex = (int)$growthTree['index'];
+
+        header('Content-Type: application/json; charset=UTF-8');
+        header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+
+        echo json_encode([
+            'success' => true,
+            'total_points' => (int)$growthStatus['total_points'],
+            'badge_count' => count($growthStatus['badges']),
+            'rank' => (int)($growthStatus['rank'] ?? 0),
+            'employee_count' => (int)$growthStatus['employee_count'],
+            'stage' => [
+                'index' => $growthStageIndex,
+                'label' => (string)$growthTree['label'],
+                'progress' => (float)$growthTree['progress'],
+                'points_to_next' => (int)$growthTree['points_to_next'],
+                'next_label' => $growthTree['next'] !== null
+                    ? (string)$growthTree['next']['label']
+                    : null,
+                'asset' => $growthAssets[$growthStageIndex] ?? $growthAssets[0],
+                'stages' => array_map(
+                    static fn(array $stage): array => [
+                        'min' => (int)$stage['min'],
+                        'label' => (string)$stage['label'],
+                    ],
+                    $growthTree['stages']
+                ),
+            ],
+            'latest_point' => $growthStatus['point_history'][0] ?? null,
+            'server_time' => (new DateTimeImmutable('now', new DateTimeZone('Asia/Manila')))->format(DateTimeInterface::ATOM),
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    } catch (Throwable $ex) {
+        error_log('Employee growth status failed: ' . $ex->getMessage());
+        http_response_code(500);
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode([
+            'success' => false,
+            'message' => 'Unable to load growth status.',
+        ]);
+    }
+    exit;
 }
 
 try {
@@ -130,9 +189,13 @@ unset($_SESSION['employee_message'], $_SESSION['employee_error']);
     <link rel="stylesheet" href="assets/css/employee-portal.css?v=20261015-1">
     <link rel="stylesheet" href="assets/css/employee-dashboard.css?v=20261022-mandatory1">
     <link rel="stylesheet" href="assets/css/employee-functions-v1.css?v=20261022-1">
+    <link rel="stylesheet" href="assets/css/points-badges.css?v=20261024-7">
 
     <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <script defer src="assets/js/employee-portal.js?v=20261022-functions1"></script>
+    <?php if ($employeeModule === 'growth'): ?>
+        <script defer src="assets/js/employee-growth.js?v=20261024-3"></script>
+    <?php endif; ?>
 </head>
 
 <body class="employee-portal-page" data-employee-preview="0">

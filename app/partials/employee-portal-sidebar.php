@@ -103,6 +103,14 @@ function employee_portal_link(
         <p class="employee-nav-label second">DEVELOPMENT</p>
 
         <a
+            href="<?= e(employee_portal_link('growth', $employeeId, $employeePortalPreview)) ?>"
+            class="employee-nav-link <?= $currentModule === 'growth' ? 'active' : '' ?>"
+            <?= $currentModule === 'growth' ? 'aria-current="page"' : '' ?>
+        >
+            <i data-lucide="sprout"></i>
+            <span>My Growth</span>
+        </a>
+        <a
             href="<?= e(employee_portal_link('performance', $employeeId, $employeePortalPreview)) ?>"
             class="employee-nav-link <?= $currentModule === 'performance' ? 'active' : '' ?>"
             <?= $currentModule === 'performance' ? 'aria-current="page"' : '' ?>

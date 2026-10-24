@@ -20,6 +20,7 @@ $moduleLabels = [
     'available' => 'Available Training',
     'my-training' => 'My Training',
     'performance' => 'My Performance',
+    'growth' => 'My Growth',
     'profile' => 'My Profile',
     'security' => 'Account & Security',
 ];

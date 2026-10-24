@@ -116,6 +116,16 @@ $isHR = $user['role'] === 'hr';
 
     <?php if ($isHR): ?>
       <a
+        href="index.php?page=points-badges"
+        class="nav-link <?= $active === 'points-badges' ? 'active' : '' ?>"
+        <?= $active === 'points-badges' ? 'aria-current="page"' : '' ?>
+      >
+        <i data-lucide="badge-plus"></i>
+        <span>Points &amp; Badges</span>
+      </a>
+    <?php endif; ?>
+    <?php if ($isHR): ?>
+      <a
         href="index.php?page=analytics"
         class="nav-link <?= $active === 'analytics' ? 'active' : '' ?>"
         <?= $active === 'analytics' ? 'aria-current="page"' : '' ?>

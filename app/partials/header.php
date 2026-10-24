@@ -12,6 +12,7 @@ $pageLabels = [
     'performance' => 'Performance Evaluation',
     'competencies' => 'Competencies',
     'analytics' => 'Analytics',
+    'points-badges' => 'Points & Badges',
 ];
 
 $pageLabel =

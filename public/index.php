@@ -31,6 +31,7 @@ $allowed = [
     'departments',
     'managers',
     'analytics',
+    'points-badges',
     'login',
     'logout'
 ];
@@ -446,6 +447,62 @@ if ($action === 'analytics') {
     if (($user['role'] ?? '') !== 'hr') {
         http_response_code(403);
         exit('Access denied. HR only.');
+    }
+}
+// ==========================================
+// HR POINTS & BADGES
+// ==========================================
+
+if ($action === 'points-badges') {
+    if (($user['role'] ?? '') !== 'hr') {
+        http_response_code(403);
+        exit('Access denied. HR only.');
+    }
+
+    require_once __DIR__
+        . '/../app/core/points-badges-data.php';
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (!csrf_valid($_POST['csrf'] ?? null)) {
+            http_response_code(403);
+            exit('Invalid CSRF token.');
+        }
+
+        unset(
+            $_SESSION['points_badges_message'],
+            $_SESSION['points_badges_error']
+        );
+
+        try {
+            $pbAction = (string)($_POST['points_badges_action'] ?? '');
+
+            if ($pbAction === 'award_points') {
+                $_SESSION['points_badges_message'] =
+                    pb_award_points((int)$user['id'], $_POST);
+            } elseif ($pbAction === 'award_badge') {
+                $_SESSION['points_badges_message'] =
+                    pb_award_badge((int)$user['id'], $_POST);
+            } elseif ($pbAction === 'create_badge') {
+                $_SESSION['points_badges_message'] =
+                    pb_create_badge((int)$user['id'], $_POST);
+            } else {
+                throw new InvalidArgumentException(
+                    'Unknown Points & Badges action.'
+                );
+            }
+        } catch (InvalidArgumentException $ex) {
+            $_SESSION['points_badges_error'] = $ex->getMessage();
+        } catch (Throwable $ex) {
+            error_log(
+                'Points & Badges action failed: '
+                . $ex->getMessage()
+            );
+            $_SESSION['points_badges_error'] =
+                'Unable to post the recognition entry. Check the PHP error log.';
+        }
+
+        redirect_to('?page=points-badges');
+        exit;
     }
 }
 

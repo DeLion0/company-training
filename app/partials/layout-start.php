@@ -60,6 +60,12 @@
         <script defer src="assets/js/analytics.js?v=20261023-1"></script>
     <?php endif; ?>
 
+    <!-- POINTS & BADGES ONLY -->
+    <?php if (($page ?? '') === 'points-badges'): ?>
+        <link rel="stylesheet" href="assets/css/points-badges.css?v=20261024-4">
+        <script defer src="assets/js/points-badges.js?v=20261024-3"></script>
+    <?php endif; ?>
+
     <!-- GLOBAL LIBRARIES -->
     <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 

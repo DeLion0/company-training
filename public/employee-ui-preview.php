@@ -29,6 +29,7 @@ $allowedModules = [
     'available' => 'employee-available-training.php',
     'my-training' => 'employee-my-training.php',
     'performance' => 'employee-performance.php',
+    'growth' => 'employee-growth.php',
     'profile' => 'employee-profile.php',
     'security' => 'employee-security.php',
 ];
@@ -71,6 +72,7 @@ $employeePortalPreview = true;
     <link rel="stylesheet" href="assets/css/employee-portal.css?v=20261015-1">
     <link rel="stylesheet" href="assets/css/employee-dashboard.css?v=20261022-mandatory1">
     <link rel="stylesheet" href="assets/css/employee-functions-v1.css?v=20261022-1">
+    <link rel="stylesheet" href="assets/css/points-badges.css?v=20261024-1">
 
     <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <script defer src="assets/js/employee-portal.js?v=20261022-functions1"></script>
