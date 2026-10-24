@@ -98,3 +98,7 @@
     padding: 0;
   }
 }
+
+.gf-page-hidden {
+  display: none !important;
+}

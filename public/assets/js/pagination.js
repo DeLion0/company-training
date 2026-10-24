@@ -231,7 +231,8 @@
       currentPage = Math.min(currentPage, totalPages);
 
       rows.forEach((row) => {
-        row.hidden = true;
+        row.classList.add("gf-page-hidden");
+        row.setAttribute("aria-hidden", "true");
       });
 
       const start = (currentPage - 1) * PAGE_SIZE;
@@ -239,7 +240,8 @@
       const end = Math.min(start + PAGE_SIZE, total);
 
       matches.slice(start, end).forEach((row) => {
-        row.hidden = false;
+        row.classList.remove("gf-page-hidden");
+        row.removeAttribute("aria-hidden");
       });
 
       if (total === 0) {
