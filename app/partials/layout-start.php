@@ -10,6 +10,7 @@
     <!-- GLOBAL CSS -->
     <link rel="stylesheet" href="assets/css/layout.css">
     <link rel="stylesheet" href="assets/css/sidebar.css">
+    <link rel="stylesheet" href="assets/css/pagination.css?v=20261025-1">
 
     <!-- DASHBOARD ONLY -->
     <?php if (($page ?? '') === 'dashboard'): ?>
@@ -71,6 +72,7 @@
 
     <!-- GLOBAL JS -->
     <script defer src="assets/js/app.js"></script>
+    <script defer src="assets/js/pagination.js?v=20261025-1"></script>
 </head>
 
 <body>
