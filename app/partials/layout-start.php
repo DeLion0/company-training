@@ -67,6 +67,19 @@
         <script defer src="assets/js/points-badges.js?v=20261024-3"></script>
     <?php endif; ?>
 
+    <?php if (
+    in_array(
+        ($page ?? ''),
+        ['hr-profile', 'hr-security'],
+        true
+    )
+): ?>
+    <link
+        rel="stylesheet"
+        href="assets/css/hr-account.css?v=20261027-1"
+    >
+<?php endif; ?>
+
     <!-- GLOBAL LIBRARIES -->
     <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 

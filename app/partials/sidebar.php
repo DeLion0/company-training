@@ -135,6 +135,32 @@ $isHR = $user['role'] === 'hr';
       </a>
     <?php endif; ?>
 
+    <?php if ($isHR): ?>
+
+      <p class="nav-label second-label">
+        ACCOUNT
+      </p>
+
+      <a
+        href="index.php?page=hr-profile"
+        class="nav-link <?= $active === 'hr-profile' ? 'active' : '' ?>"
+        <?= $active === 'hr-profile' ? 'aria-current="page"' : '' ?>
+      >
+        <i data-lucide="circle-user-round"></i>
+        <span>My Profile</span>
+      </a>
+
+      <a
+        href="index.php?page=hr-security"
+        class="nav-link <?= $active === 'hr-security' ? 'active' : '' ?>"
+        <?= $active === 'hr-security' ? 'aria-current="page"' : '' ?>
+      >
+        <i data-lucide="shield-check"></i>
+        <span>Account &amp; Security</span>
+      </a>
+
+    <?php endif; ?>
+
   </nav>
 
   <div class="sidebar-bottom">

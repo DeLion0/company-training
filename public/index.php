@@ -32,6 +32,8 @@ $allowed = [
     'managers',
     'analytics',
     'points-badges',
+    'hr-profile',
+    'hr-security',
     'login',
     'logout'
 ];
@@ -831,6 +833,64 @@ if ($action === 'training') {
     }
 }
 
+// ==========================================
+// HR ACCOUNT
+// ==========================================
+
+if (
+    $action === 'hr-profile'
+    || $action === 'hr-security'
+) {
+    if (($user['role'] ?? '') !== 'hr') {
+        http_response_code(403);
+        exit('Access denied. HR only.');
+    }
+
+    require_once __DIR__
+        . '/../app/core/hr-account.php';
+}
+
+if (
+    $action === 'hr-security'
+    && $_SERVER['REQUEST_METHOD'] === 'POST'
+) {
+    if (!csrf_valid($_POST['csrf'] ?? null)) {
+        http_response_code(403);
+        exit('Invalid CSRF token.');
+    }
+
+    unset(
+        $_SESSION['hr_security_message'],
+        $_SESSION['hr_security_error']
+    );
+
+    try {
+        if (
+            (string)($_POST['security_action'] ?? '')
+            !== 'change_password'
+        ) {
+            throw new InvalidArgumentException(
+                'Invalid security action.'
+            );
+        }
+
+        hr_change_password(
+            (int)$user['id'],
+            (string)($_POST['current_password'] ?? ''),
+            (string)($_POST['new_password'] ?? ''),
+            (string)($_POST['confirm_password'] ?? '')
+        );
+
+        $_SESSION['hr_security_message'] =
+            'Password changed successfully.';
+
+    } catch (Throwable $ex) {
+        $_SESSION['hr_security_error'] =
+            $ex->getMessage();
+    }
+
+    redirect_to('?page=hr-security');
+}
 
 // ==========================================
 // PAGE RENDERING

@@ -1,0 +1,324 @@
+.hr-account-page {
+  padding: 32px;
+}
+
+.hr-account-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+
+.hr-account-kicker,
+.hr-account-card-head span {
+  color: #2e8652;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 1.1px;
+}
+
+.hr-account-heading h1 {
+  margin: 7px 0 5px;
+  color: #203d2d;
+  font:
+    800 29px/1.1 Manrope,
+    sans-serif;
+}
+
+.hr-account-heading p,
+.hr-account-card-head p {
+  margin: 0;
+  color: #839188;
+  font-size: 9px;
+}
+
+.hr-account-status {
+  min-width: 175px;
+  padding: 13px 15px;
+  border: 1px solid #dfe8e2;
+  border-radius: 13px;
+  background: #fff;
+}
+
+.hr-account-status span,
+.hr-account-status strong {
+  display: block;
+}
+
+.hr-account-status span {
+  color: #8a9990;
+  font-size: 7px;
+}
+
+.hr-account-status strong {
+  margin-top: 3px;
+  color: #2d8050;
+  font:
+    800 17px Manrope,
+    sans-serif;
+}
+
+.hr-profile-grid {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 16px;
+}
+
+.hr-security-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.75fr) minmax(0, 1.25fr);
+  gap: 16px;
+}
+
+.hr-account-card {
+  padding: 20px;
+  border: 1px solid #dfe8e2;
+  border-radius: 15px;
+  background: #fff;
+}
+
+.hr-profile-identity {
+  text-align: center;
+}
+
+.hr-profile-avatar {
+  width: 66px;
+  height: 66px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  background: #dff1e5;
+  color: #27804c;
+  font:
+    800 22px Manrope,
+    sans-serif;
+}
+
+.hr-active-pill {
+  display: inline-flex;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: #e7f5eb;
+  color: #287c4b;
+  font-size: 7px;
+  font-weight: 900;
+}
+
+.hr-profile-identity h2 {
+  margin: 12px 0 3px;
+  color: #314d3a;
+  font:
+    800 16px Manrope,
+    sans-serif;
+}
+
+.hr-profile-identity > p {
+  margin: 0 0 15px;
+  color: #85948b;
+  font-size: 9px;
+}
+
+.hr-profile-line {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 0;
+  border-top: 1px solid #edf2ee;
+  color: #61766a;
+  font-size: 8.5px;
+  text-align: left;
+}
+
+.hr-profile-line svg {
+  width: 14px;
+  color: #59906c;
+}
+
+.hr-account-card-head {
+  margin-bottom: 16px;
+}
+
+.hr-account-card-head h2 {
+  margin: 5px 0;
+  color: #314d3a;
+  font:
+    800 14px Manrope,
+    sans-serif;
+}
+
+.hr-account-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.hr-account-details > div,
+.hr-security-details > div {
+  padding: 12px;
+  border: 1px solid #e5ece7;
+  border-radius: 10px;
+  background: #fafcfb;
+}
+
+.hr-account-details span,
+.hr-account-details strong,
+.hr-security-details span,
+.hr-security-details strong {
+  display: block;
+}
+
+.hr-account-details span,
+.hr-security-details span {
+  color: #909e95;
+  font-size: 7.5px;
+}
+
+.hr-account-details strong,
+.hr-security-details strong {
+  margin-top: 4px;
+  color: #496151;
+  font-size: 9px;
+  overflow-wrap: anywhere;
+}
+
+.hr-security-icon {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 16px;
+  border-radius: 14px;
+  background: #e4f4e9;
+  color: #2f8753;
+}
+
+.hr-security-icon svg {
+  width: 24px;
+}
+
+.hr-account-card > h2 {
+  margin: 7px 0;
+  color: #34503d;
+  font:
+    800 14px Manrope,
+    sans-serif;
+}
+
+.hr-account-card > p {
+  margin: 0;
+  color: #819188;
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+.hr-security-details {
+  display: grid;
+  gap: 9px;
+  margin-top: 17px;
+}
+
+.hr-password-form {
+  display: grid;
+  gap: 11px;
+}
+
+.hr-password-form label {
+  display: grid;
+  gap: 6px;
+  color: #61786a;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.hr-password-form input {
+  width: 100%;
+  min-height: 40px;
+  padding: 0 11px;
+  border: 1px solid #dce7df;
+  border-radius: 9px;
+  outline: none;
+}
+
+.hr-password-form input:focus {
+  border-color: #91bca0;
+  box-shadow: 0 0 0 3px rgba(45, 137, 82, 0.08);
+}
+
+.hr-password-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.hr-password-form > p {
+  margin: 0;
+  color: #89988f;
+  font-size: 7.5px;
+}
+
+.hr-password-button {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 9px;
+  background: #298b53;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.hr-password-button svg {
+  width: 14px;
+}
+
+.hr-security-message {
+  margin-bottom: 15px;
+  padding: 11px 13px;
+  border-radius: 10px;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.hr-security-message.success {
+  border: 1px solid #cee6d5;
+  background: #eaf7ee;
+  color: #267647;
+}
+
+.hr-security-message.error {
+  border: 1px solid #f0cec6;
+  background: #fff1ee;
+  color: #a24434;
+}
+
+@media (max-width: 900px) {
+  .hr-profile-grid,
+  .hr-security-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .hr-account-page {
+    padding: 22px 14px 60px;
+  }
+
+  .hr-account-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .hr-account-status {
+    min-width: 0;
+  }
+
+  .hr-account-details,
+  .hr-password-row {
+    grid-template-columns: 1fr;
+  }
+}

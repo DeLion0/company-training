@@ -13,6 +13,8 @@ $pageLabels = [
     'competencies' => 'Competencies',
     'analytics' => 'Analytics',
     'points-badges' => 'Points & Badges',
+    'hr-profile' => 'My Profile',
+    'hr-security' => 'Account & Security',
 ];
 
 $pageLabel =
