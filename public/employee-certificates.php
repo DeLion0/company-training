@@ -89,7 +89,7 @@ $employee = $certificateData['employee'];
 
     <link
         rel="stylesheet"
-        href="assets/css/employee-certificates.css?v=20261022-1"
+        href="assets/css/employee-certificates.css?v=20261027-1"
     >
 
     <script
