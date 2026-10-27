@@ -172,13 +172,23 @@ $employee = $certificateData['employee'];
 
                         <article class="employee-certificate-card">
 
-                            <div class="employee-certificate-preview">
+                            <div
+                                class="employee-certificate-preview employee-certificate-preview-design-<?= $designNumber ?>"
+                            >
                                 <img
-                                    src="assets/certificates/template-<?= $designNumber ?>.png"
+                                    src="assets/certificates/template-<?= $designNumber ?>-master.png"
                                     alt=""
                                 >
 
-                                <span>
+                                <div class="employee-certificate-preview-name">
+                                    <?= e((string) $employee['full_name']) ?>
+                                </div>
+
+                                <div class="employee-certificate-preview-training">
+                                    <?= e((string) $certificate['training_title']) ?>
+                                </div>
+
+                                <span class="employee-certificate-design-tag">
                                     Design <?= $designNumber ?>
                                 </span>
                             </div>
