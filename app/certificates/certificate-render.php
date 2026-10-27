@@ -72,7 +72,7 @@ $trainingTitle =
 >
     <img
         class="certificate-background"
-        src="assets/certificates/template-<?= $templateNumber ?>-master.png?v=20261022-5"
+        src="assets/certificates/template-<?= $templateNumber ?>-master.png?v=20261027-2"
         alt=""
         aria-hidden="true"
     >

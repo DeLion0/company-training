@@ -89,6 +89,11 @@ $employee = $certificateData['employee'];
 
     <link
         rel="stylesheet"
+        href="assets/css/employee-functions-v1.css?v=20261022-1"
+    >
+
+    <link
+        rel="stylesheet"
         href="assets/css/employee-certificates.css?v=20261027-1"
     >
 
@@ -99,7 +104,7 @@ $employee = $certificateData['employee'];
 
     <script
         defer
-        src="assets/js/employee-portal.js?v=20261015-1"
+        src="assets/js/employee-portal.js?v=20261022-functions1"
     ></script>
 </head>
 

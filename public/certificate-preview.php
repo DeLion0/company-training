@@ -115,7 +115,7 @@ $trainingTitle =
 
     <link
         rel="stylesheet"
-        href="assets/css/certificate-render-final.css?v=20261022-8"
+        href="assets/css/certificate-render-final.css?v=20261027-3"
     >
 
     <script

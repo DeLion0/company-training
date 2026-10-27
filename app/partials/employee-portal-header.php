@@ -21,6 +21,7 @@ $moduleLabels = [
     'my-training' => 'My Training',
     'performance' => 'My Performance',
     'growth' => 'My Growth',
+    'certificates' => 'My Certificates',
     'profile' => 'My Profile',
     'security' => 'Account & Security',
 ];
