@@ -41,9 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         if ($action === 'preview_attendance') {
             $programId = (int) ($_POST['program_id'] ?? 0);
-            $templateKey = cert_template_key(
-                (string) ($_POST['template_key'] ?? '')
-            );
+           $templateKey = 'template_4';
 
             $file = $_FILES['attendance_file'] ?? null;
 
@@ -153,9 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         } elseif ($action === 'issue_eligible') {
             $programId = (int) ($_POST['program_id'] ?? 0);
-            $templateKey = cert_template_key(
-                (string) ($_POST['template_key'] ?? '')
-            );
+            $templateKey = 'template_4';
 
             $issued = cert_issue_eligible_manual(
                 (int) $user['id'],
@@ -249,7 +245,7 @@ require __DIR__ . '/../app/partials/header.php';
 
 <link
     rel="stylesheet"
-    href="assets/css/certifications.css?v=20261022-2"
+    href="assets/css/certifications.css?v=20261027-2"
 >
 
 <main class="content cert-page" id="certificationsPage">
@@ -450,56 +446,7 @@ require __DIR__ . '/../app/partials/header.php';
                 </div>
 
 
-                <div class="cert-field">
-                    <label>
-                        Certificate Design
-                        <b>*</b>
-                    </label>
 
-                    <div class="cert-template-grid">
-
-                        <?php
-                        $templateNames = [
-                            'template_1' => 'Formal Green & Gold',
-                            'template_2' => 'Modern Executive',
-                            'template_3' => 'Botanical Premium',
-                            'template_4' => 'Heritage Institutional',
-                        ];
-                        ?>
-
-                        <?php foreach ($templateNames as $key => $name): ?>
-                            <?php
-                            $number = (int) substr($key, -1);
-                            ?>
-                            <label class="cert-template-option">
-                                <input
-                                    type="radio"
-                                    name="template_key"
-                                    value="<?= e($key) ?>"
-                                    <?= $key === 'template_1'
-                                        ? 'checked'
-                                        : ''
-                                    ?>
-                                >
-
-                                <span class="cert-template-card">
-                                    <img
-                                        src="assets/certificates/template-<?= $number ?>.png"
-                                        alt="<?= e($name) ?>"
-                                    >
-
-                                    <span>
-                                        <b><?= e($name) ?></b>
-                                        <small>
-                                            Design <?= $number ?>
-                                        </small>
-                                    </span>
-                                </span>
-                            </label>
-                        <?php endforeach; ?>
-
-                    </div>
-                </div>
 
 
                 <div class="cert-upload">
@@ -603,6 +550,28 @@ require __DIR__ . '/../app/partials/header.php';
                 </div>
             </div>
 
+            <div class="cert-field">
+
+                <div class="cert-fixed-template">
+                    <div class="cert-fixed-template-head">
+                        <div>
+                            <span>OFFICIAL CERTIFICATE</span>
+                            <strong>Heritage Institutional</strong>
+                        </div>
+
+                        <small>DEFAULT</small>
+                    </div>
+
+                    <img
+                        src="assets/certificates/template-4-master.png?v=20261027-5"
+                        alt="Heritage Institutional Certificate"
+                    >
+
+                    <p>
+                        All completed training certificates use this official Grow/Flow design.
+                    </p>
+                </div>
+            </div>
 
             <div class="cert-guide-list">
 
@@ -962,26 +931,11 @@ require __DIR__ . '/../app/partials/header.php';
                             value="<?= (int) $program['id'] ?>"
                         >
 
-                        <select
+                        <input
+                            type="hidden"
                             name="template_key"
-                            aria-label="Certificate design"
+                            value="template_4"
                         >
-                            <option value="template_1">
-                                Design 1 · Formal Green &amp; Gold
-                            </option>
-
-                            <option value="template_2">
-                                Design 2 · Modern Executive
-                            </option>
-
-                            <option value="template_3">
-                                Design 3 · Botanical Premium
-                            </option>
-
-                            <option value="template_4">
-                                Design 4 · Heritage Institutional
-                            </option>
-                        </select>
 
                         <button
                             type="submit"
