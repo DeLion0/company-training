@@ -1,7 +1,17 @@
 <?php
 
+$hrUser = authenticated_user();
+
+if (
+    !$hrUser
+    || ($hrUser['role'] ?? '') !== 'hr'
+) {
+    http_response_code(403);
+    exit('Access denied. HR only.');
+}
+
 $hrAccount = hr_account_data(
-    (int)$user['id']
+    (int)$hrUser['id']
 );
 
 $message =
